@@ -1,723 +1,1189 @@
 
-
-
-
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Painel Atendimento Telefônico</title>
-
-<script src="https://api.backendless.com/sdk/js/latest/backendless.min.js"></script>
-<script>
-Backendless.initApp(
-  "16519BB0-2CC5-4D6D-A7C8-CC9B9D69F91B",
-  "FD19561E-7DE2-4E6B-AA75-2C846AF62F87"
-);
-</script>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Noah e o Planeta dos Sonhos ✨</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-*{ box-sizing:border-box; font-family:Arial }
-body{ margin:0; background:#f4f6f8; color:#0f172a; }
-header{ background:#001e36; color:#fff; padding:15px; text-align:center; font-size:20px; font-weight:bold; position:relative }
-.admin-btn{ position:absolute; right:20px; top:12px; background:#0b3c5d; color:#fff; border:none; padding:8px 14px; border-radius:8px; cursor:pointer }
-.admin-panel{ position:fixed; top:60px; right:20px; width:360px; background:#fff; padding:20px; border-radius:14px; box-shadow:0 10px 30px rgba(0,0,0,.15); display:none; z-index:999 }
-.admin-panel h2{ margin-top:0; color:#001e36 }
-.admin-panel button.close{ background:#b91c1c; color:#fff; width:100%; margin-top:10px }
-.container{ max-width:1300px; margin:20px auto; padding:20px }
-.card{ background:#fff; padding:20px; border-radius:14px; margin-bottom:20px; box-shadow:0 6px 18px rgba(0,0,0,.08) }
-h2{ margin-top:0; color:#001e36 }
-input,select,button{ padding:10px; border-radius:8px; border:1px solid #cbd5e1 }
-button{ cursor:pointer; font-weight:bold }
-.pause-buttons{ display:flex; flex-wrap:wrap; gap:10px; margin-top:10px }
-.pause-buttons button{ background:#e5e7eb; color:#001e36 }
-.pause-buttons button:hover{ background:#cbd5e1 }
-.adm{ border:2px dashed #001e36 }
-.grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px }
-table{ width:100%; border-collapse:collapse }
-th,td{ border:1px solid #e5e7eb; padding:8px; text-align:center }
-th{ background:#eef2f6; color:#001e36 }
-.status{ display:flex; align-items:center; justify-content:center; gap:6px; font-weight:bold }
-.bolinha{ width:10px; height:10px; border-radius:50% }
-.verde{ background:#16a34a; color:#14532d }
-.vermelho{ background:#dc2626; color:#7f1d1d }
-.badge{ padding:3px 8px; border-radius:10px; font-size:12px; font-weight:bold }
-.chat{ background:#e0f2fe; color:#075985 }
-.telefone{ background:#e5e7eb; color:#001e36 }
-.lista-analistas{ margin-top:15px }
-.lista-analistas div{ display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; gap:6px }
-.lista-analistas button{ padding:4px 6px; font-size:11px }
-.admin-actions{ display:flex; gap:10px; margin-bottom:10px }
-
-/* ===== Resumo de Disponibilidade ===== */
-.resumo-pausas{
-  display:flex;
-  gap:15px;
-  margin-top:15px;
+/* ─── RESET & BASE ─────────────────────────────────────────── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --sky1:#04061a;--sky2:#0d1245;--sky3:#1a0835;
+  --star:#fff9e0;--gold:#ffd060;--gold2:#ffaa20;
+  --blue:#4488ff;--teal:#22ccaa;--pink:#ff66bb;
+  --purple:#a855f7;--orange:#ff8844;--green:#44cc66;
+  --suit:#c8ddf5;--suit2:#5a7fb0;
+  --text:#f0eeff;--textd:#1a0a3a;
+  --panel:rgba(10,8,40,0.82);
+  --r:1.5rem;
+  font-size:16px;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--sky1);
+  color:var(--text);
+  font-family:'Nunito',sans-serif;
+  overflow-x:hidden;
+  cursor:none;
 }
 
-.resumo-box{
-  flex:1;
-  background:#f8fafc;
-  border-radius:12px;
-  padding:15px;
+/* ─── CUSTOM CURSOR ────────────────────────────────────────── */
+#cursor{
+  position:fixed;width:28px;height:28px;pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);transition:transform .12s ease;
+}
+#cursor svg{width:100%;height:100%;filter:drop-shadow(0 0 6px #ffd06088)}
+body:hover #cursor{transform:translate(-50%,-50%) scale(1)}
+
+/* ─── STARS CANVAS ─────────────────────────────────────────── */
+#starfield{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ─── FLOATING PARTICLES ───────────────────────────────────── */
+.particle{
+  position:fixed;pointer-events:none;z-index:1;
+  border-radius:50%;animation:floatUp linear infinite;
+  opacity:0;
+}
+@keyframes floatUp{
+  0%{transform:translateY(0) rotate(0deg);opacity:0}
+  10%{opacity:.7}
+  90%{opacity:.4}
+  100%{transform:translateY(-100vh) rotate(720deg);opacity:0}
+}
+
+/* ─── SECTIONS SHARED ──────────────────────────────────────── */
+section{position:relative;z-index:2}
+
+/* ─── NAV ──────────────────────────────────────────────────── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.9rem 2.5rem;
+  background:rgba(4,6,26,.75);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(100,120,255,.15);
+}
+.nav-logo{
+  font-family:'Fredoka One',cursive;font-size:1.5rem;
+  background:linear-gradient(135deg,var(--gold),var(--pink));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  letter-spacing:.03em;
+}
+.nav-links{display:flex;gap:1.4rem;list-style:none}
+.nav-links a{
+  color:rgba(255,255,255,.75);text-decoration:none;font-weight:700;
+  font-size:.9rem;letter-spacing:.04em;
+  transition:color .2s;
+}
+.nav-links a:hover{color:var(--gold)}
+.btn-nav{
+  background:linear-gradient(135deg,var(--gold),var(--orange));
+  color:var(--textd)!important;
+  padding:.45rem 1.2rem;border-radius:50px;
+  font-weight:900!important;font-size:.85rem!important;
+  transition:transform .2s,box-shadow .2s!important;
+  box-shadow:0 4px 18px rgba(255,180,30,.35);
+}
+.btn-nav:hover{transform:translateY(-2px) scale(1.05)!important;box-shadow:0 8px 28px rgba(255,180,30,.5)!important}
+
+/* ─── HERO ─────────────────────────────────────────────────── */
+#hero{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:6rem 2rem 3rem;
+  background:radial-gradient(ellipse 80% 60% at 50% 60%, rgba(68,136,255,.12) 0%, transparent 70%),
+             radial-gradient(ellipse 50% 40% at 70% 40%, rgba(168,85,247,.1) 0%, transparent 60%);
+}
+.hero-inner{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:3rem;align-items:center;max-width:1100px;width:100%;
+}
+.hero-text{animation:fadeSlideLeft .9s cubic-bezier(.22,1,.36,1) both}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:rgba(255,208,96,.12);border:1px solid rgba(255,208,96,.3);
+  border-radius:50px;padding:.3rem .9rem;
+  font-size:.78rem;font-weight:800;color:var(--gold);
+  letter-spacing:.08em;text-transform:uppercase;margin-bottom:1.2rem;
+}
+.hero-badge span{font-size:1rem}
+h1{
+  font-family:'Fredoka One',cursive;
+  font-size:clamp(2.4rem,5vw,4.2rem);
+  line-height:1.1;
+  background:linear-gradient(160deg,#fff 0%,var(--gold) 40%,var(--pink) 80%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:1rem;
+}
+.hero-sub{
+  font-size:1.15rem;line-height:1.7;
+  color:rgba(240,238,255,.75);margin-bottom:2rem;
+  max-width:480px;
+}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:.6rem;
+  background:linear-gradient(135deg,var(--gold),var(--orange));
+  color:var(--textd);font-weight:900;font-size:1rem;
+  padding:.85rem 2rem;border-radius:50px;text-decoration:none;
+  border:none;cursor:none;
+  box-shadow:0 6px 28px rgba(255,170,30,.45);
+  transition:transform .25s,box-shadow .25s;
+  animation:pulse 2.5s ease-in-out infinite;
+}
+.btn-primary:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 12px 40px rgba(255,170,30,.6)}
+@keyframes pulse{0%,100%{box-shadow:0 6px 28px rgba(255,170,30,.45)}50%{box-shadow:0 6px 40px rgba(255,170,30,.75)}}
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:.6rem;
+  background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.2);
+  color:var(--text);font-weight:800;font-size:1rem;
+  padding:.85rem 2rem;border-radius:50px;text-decoration:none;cursor:none;
+  transition:background .25s,border-color .25s,transform .25s;
+}
+.btn-secondary:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.4);transform:translateY(-3px)}
+.hero-stats{display:flex;gap:2rem;margin-top:2.2rem;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-family:'Fredoka One',cursive;font-size:2rem;color:var(--gold);line-height:1}
+.stat-label{font-size:.75rem;color:rgba(255,255,255,.5);font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+
+/* BOOK 3D */
+.hero-book{
+  display:flex;justify-content:center;align-items:center;
+  animation:fadeSlideRight .9s cubic-bezier(.22,1,.36,1) .2s both;
+}
+.book-scene{
+  perspective:900px;
+  width:280px;height:360px;
+  animation:bookFloat 4s ease-in-out infinite;
+}
+@keyframes bookFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}
+.book-3d{
+  width:100%;height:100%;position:relative;
+  transform-style:preserve-3d;
+  transform:rotateY(-22deg) rotateX(6deg);
+  transition:transform .5s ease;
+}
+.book-scene:hover .book-3d{transform:rotateY(-8deg) rotateX(3deg)}
+.book-face,.book-back,.book-spine{
+  position:absolute;border-radius:4px 12px 12px 4px;
+  backface-visibility:hidden;
+}
+.book-face{
+  inset:0;
+  background:linear-gradient(160deg,#0a1245 0%,#08072a 100%);
+  border:2px solid rgba(100,140,255,.3);
+  overflow:hidden;display:flex;flex-direction:column;align-items:center;
+  justify-content:flex-end;padding:1.2rem;
+  box-shadow:8px 8px 40px rgba(0,0,0,.8),inset 0 0 60px rgba(68,136,255,.08);
+}
+.book-face::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 55%,rgba(68,136,255,.25) 0%,transparent 70%),
+    radial-gradient(ellipse 40% 35% at 70% 35%,rgba(168,85,247,.18) 0%,transparent 55%);
+}
+.book-planet{
+  position:absolute;top:15%;left:50%;transform:translateX(-50%);
+  width:110px;height:110px;border-radius:50%;
+  background:radial-gradient(circle at 35% 65%,#4488ff,#1a2a80);
+  box-shadow:0 0 40px rgba(68,136,255,.6),inset -20px -10px 30px rgba(0,0,20,.5);
+}
+.book-planet::after{
+  content:'';position:absolute;
+  width:160%;height:30%;top:35%;left:-30%;
+  border:6px solid rgba(255,208,96,.5);
+  border-radius:50%;transform:rotateX(70deg);
+}
+.book-noah{
+  position:absolute;top:30%;left:50%;transform:translateX(-40%);
+  font-size:4rem;filter:drop-shadow(0 0 12px rgba(255,208,96,.6));
+  animation:noahWave 2s ease-in-out infinite;
+}
+@keyframes noahWave{0%,100%{transform:translateX(-40%) rotate(-3deg)}50%{transform:translateX(-40%) rotate(3deg)}}
+.book-title{
+  font-family:'Fredoka One',cursive;font-size:.9rem;
+  text-align:center;color:var(--gold);position:relative;z-index:1;
+  text-shadow:0 0 20px rgba(255,208,96,.6);
+}
+.book-stars-deco{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.book-star{position:absolute;width:3px;height:3px;background:white;border-radius:50%;animation:twinkle 2s infinite}
+@keyframes twinkle{0%,100%{opacity:.3}50%{opacity:1}}
+.book-spine{
+  width:28px;top:4px;bottom:4px;left:-28px;border-radius:8px 4px 4px 8px;
+  background:linear-gradient(180deg,#1a2870,#0a0d30);
+  border:2px solid rgba(100,140,255,.2);
+  box-shadow:-4px 0 20px rgba(0,0,0,.5);
+}
+.book-glow{
+  position:absolute;inset:-20px;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(68,136,255,.2) 0%,transparent 70%);
+  pointer-events:none;
+  animation:glowPulse 3s ease-in-out infinite;
+}
+@keyframes glowPulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:.9;transform:scale(1.08)}}
+
+/* ─── REVEAL ANIMATIONS ────────────────────────────────────── */
+@keyframes fadeSlideLeft{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}
+@keyframes fadeSlideRight{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+@keyframes fadeSlideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
+@keyframes scaleIn{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+
+.reveal{opacity:0;transform:translateY(36px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+.reveal.visible{opacity:1;transform:none}
+.reveal-left{opacity:0;transform:translateX(-36px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+.reveal-left.visible{opacity:1;transform:none}
+.reveal-right{opacity:0;transform:translateX(36px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+.reveal-right.visible{opacity:1;transform:none}
+.reveal-scale{opacity:0;transform:scale(.85);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1)}
+.reveal-scale.visible{opacity:1;transform:scale(1)}
+
+/* ─── FEATURES ─────────────────────────────────────────────── */
+#features{
+  padding:7rem 2rem;
+  background:linear-gradient(180deg,transparent,rgba(10,8,40,.6),transparent);
+}
+.section-title{
+  font-family:'Fredoka One',cursive;
+  font-size:clamp(1.9rem,4vw,3rem);
+  text-align:center;margin-bottom:.6rem;
+  background:linear-gradient(135deg,#fff,var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.section-sub{text-align:center;color:rgba(255,255,255,.55);margin-bottom:3.5rem;font-size:1rem}
+.features-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:1.5rem;max-width:1100px;margin:0 auto;
+}
+.feature-card{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;padding:2rem 1.6rem;
+  transition:transform .3s,background .3s,box-shadow .3s;
+  position:relative;overflow:hidden;
+}
+.feature-card::before{
+  content:'';position:absolute;inset:0;border-radius:20px;
+  background:linear-gradient(135deg,rgba(255,255,255,.04),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.feature-card:hover{transform:translateY(-8px);background:rgba(255,255,255,.07);box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.feature-card:hover::before{opacity:1}
+.feature-icon{font-size:2.8rem;margin-bottom:1rem;display:block;animation:iconBounce 3s ease-in-out infinite}
+@keyframes iconBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.feature-card:nth-child(2) .feature-icon{animation-delay:.4s}
+.feature-card:nth-child(3) .feature-icon{animation-delay:.8s}
+.feature-card:nth-child(4) .feature-icon{animation-delay:1.2s}
+.feature-card h3{font-family:'Baloo 2',cursive;font-size:1.15rem;font-weight:700;margin-bottom:.5rem;color:var(--gold)}
+.feature-card p{font-size:.9rem;color:rgba(255,255,255,.6);line-height:1.65}
+
+/* ─── PREVIEW / PAGES ──────────────────────────────────────── */
+#preview{
+  padding:7rem 2rem;
+  background:radial-gradient(ellipse 80% 50% at 50% 50%, rgba(168,85,247,.07) 0%, transparent 70%);
+}
+.pages-showcase{
+  display:flex;gap:1.5rem;overflow-x:auto;padding:1rem .5rem 2rem;
+  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.15) transparent;
+  max-width:1200px;margin:0 auto;
+  scroll-snap-type:x mandatory;
+}
+.page-thumb{
+  flex:0 0 200px;height:270px;border-radius:14px;
+  background:var(--sky1);border:2px solid rgba(255,255,255,.08);
+  overflow:hidden;cursor:none;position:relative;
+  transition:transform .3s,box-shadow .3s;
+  scroll-snap-align:start;
+}
+.page-thumb:hover{transform:scale(1.08) translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.page-thumb-inner{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;position:relative;overflow:hidden}
+.page-thumb canvas{position:absolute;inset:0;width:100%;height:100%}
+.page-thumb-label{position:absolute;bottom:8px;font-size:.7rem;font-weight:800;color:rgba(255,255,255,.5);letter-spacing:.06em}
+.page-num-badge{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.5);border-radius:50px;padding:.15rem .5rem;font-size:.65rem;color:rgba(255,255,255,.6);font-weight:700}
+
+/* ─── PRICING ──────────────────────────────────────────────── */
+#pricing{padding:7rem 2rem}
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.8rem;max-width:900px;margin:0 auto}
+.price-card{
+  border-radius:24px;padding:2.4rem 2rem;position:relative;overflow:hidden;
+  border:1.5px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.04);
+  transition:transform .3s,box-shadow .3s;
+}
+.price-card:hover{transform:translateY(-8px)}
+.price-card.featured{
+  background:linear-gradient(160deg,rgba(68,136,255,.12),rgba(168,85,247,.1));
+  border-color:rgba(100,160,255,.35);
+  box-shadow:0 0 60px rgba(68,136,255,.2);
+}
+.price-card.featured::before{
+  content:'⭐ MAIS POPULAR';
+  position:absolute;top:1rem;right:1rem;
+  background:linear-gradient(135deg,var(--gold),var(--orange));
+  color:var(--textd);font-size:.65rem;font-weight:900;
+  padding:.25rem .7rem;border-radius:50px;letter-spacing:.06em;
+}
+.price-name{font-family:'Fredoka One',cursive;font-size:1.2rem;color:rgba(255,255,255,.7);margin-bottom:.5rem}
+.price-amount{font-family:'Fredoka One',cursive;font-size:3rem;color:var(--gold);line-height:1}
+.price-period{font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:1.5rem}
+.price-features{list-style:none;margin-bottom:2rem}
+.price-features li{padding:.4rem 0;font-size:.9rem;color:rgba(255,255,255,.65);display:flex;align-items:center;gap:.5rem}
+.price-features li::before{content:'✦';color:var(--gold);font-size:.7rem}
+.btn-price{
+  display:block;text-align:center;text-decoration:none;
+  padding:.85rem;border-radius:50px;font-weight:900;font-size:.95rem;
+  transition:transform .2s,box-shadow .2s;cursor:none;
+}
+.btn-price.main{background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--textd);box-shadow:0 6px 24px rgba(255,170,30,.35)}
+.btn-price.main:hover{transform:translateY(-2px);box-shadow:0 10px 34px rgba(255,170,30,.55)}
+.btn-price.outline{border:1.5px solid rgba(255,255,255,.2);color:var(--text)}
+.btn-price.outline:hover{background:rgba(255,255,255,.08);transform:translateY(-2px)}
+
+/* ─── TESTIMONIALS ─────────────────────────────────────────── */
+#reviews{
+  padding:7rem 2rem;
+  background:linear-gradient(180deg,transparent,rgba(20,10,50,.5),transparent);
+}
+.reviews-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;max-width:1000px;margin:0 auto}
+.review-card{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  border-radius:18px;padding:1.8rem;
+  transition:transform .3s;
+}
+.review-card:hover{transform:translateY(-5px)}
+.review-stars{color:var(--gold);font-size:1rem;margin-bottom:.8rem;letter-spacing:.1em}
+.review-text{font-size:.92rem;color:rgba(255,255,255,.7);line-height:1.7;margin-bottom:1rem;font-style:italic}
+.review-author{display:flex;align-items:center;gap:.8rem}
+.review-avatar{width:38px;height:38px;border-radius:50%;font-size:1.4rem;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.08)}
+.review-name{font-weight:800;font-size:.85rem}
+.review-role{font-size:.75rem;color:rgba(255,255,255,.4)}
+
+/* ─── CTA FINAL ────────────────────────────────────────────── */
+#cta{
+  padding:8rem 2rem;text-align:center;
+  background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(68,136,255,.15) 0%,transparent 70%);
+}
+#cta h2{font-family:'Fredoka One',cursive;font-size:clamp(2rem,4vw,3.5rem);margin-bottom:1rem}
+#cta p{color:rgba(255,255,255,.6);max-width:500px;margin:0 auto 2.5rem;font-size:1.05rem;line-height:1.7}
+
+/* ─── FOOTER ───────────────────────────────────────────────── */
+footer{
+  padding:2rem;text-align:center;
+  border-top:1px solid rgba(255,255,255,.06);
+  color:rgba(255,255,255,.3);font-size:.82rem;
+}
+
+/* ─── READING MODE ─────────────────────────────────────────── */
+#reading-overlay{
+  position:fixed;inset:0;z-index:1000;
+  background:#02030e;
+  display:none;flex-direction:column;
+}
+#reading-overlay.open{display:flex}
+
+.reader-nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.7rem 1.8rem;
+  background:rgba(4,6,26,.9);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(100,120,255,.12);
+  flex-shrink:0;
+}
+.reader-title{font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--gold)}
+.reader-controls{display:flex;align-items:center;gap:1rem}
+.reader-btn{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  color:var(--text);padding:.4rem .9rem;border-radius:50px;
+  font-size:.82rem;font-weight:700;cursor:none;
+  transition:background .2s,transform .2s;font-family:'Nunito',sans-serif;
+}
+.reader-btn:hover{background:rgba(255,255,255,.15);transform:scale(1.05)}
+.reader-btn.close-btn{background:rgba(255,80,80,.15);border-color:rgba(255,80,80,.25);color:#ff8888}
+.reader-btn.close-btn:hover{background:rgba(255,80,80,.28)}
+.reader-progress-bar{
+  height:3px;background:rgba(255,255,255,.06);flex-shrink:0;
+}
+.reader-progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--blue),var(--purple),var(--pink));
+  transition:width .4s ease;width:0%;
+}
+
+.reader-pages{
+  flex:1;overflow-y:auto;
+  scroll-snap-type:y mandatory;
+  scroll-behavior:smooth;
+}
+.reader-page{
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  scroll-snap-align:start;
+  position:relative;overflow:hidden;
+  padding:2rem;
+}
+
+/* Page backgrounds */
+.reader-page canvas.page-bg{
+  position:absolute;inset:0;width:100%;height:100%;
+}
+
+.page-content{
+  position:relative;z-index:2;
+  max-width:700px;width:100%;
+  display:flex;flex-direction:column;align-items:center;
+  gap:2rem;
+}
+
+.page-illustration{
+  width:100%;max-width:480px;
+  aspect-ratio:4/3;border-radius:20px;overflow:hidden;
+  position:relative;
+  box-shadow:0 20px 60px rgba(0,0,0,.7);
+  border:1.5px solid rgba(255,255,255,.08);
+}
+.page-illustration canvas{width:100%;height:100%;display:block}
+
+.page-text-block{
+  background:rgba(8,6,32,.78);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(120,130,255,.2);
+  border-radius:18px;padding:1.8rem 2.2rem;
+  max-width:560px;width:100%;
+  transform:translateY(30px);opacity:0;
+  transition:transform .7s cubic-bezier(.22,1,.36,1),opacity .7s;
+}
+.page-text-block.animate-in{transform:translateY(0);opacity:1}
+
+.page-number{
+  font-family:'Fredoka One',cursive;font-size:.85rem;
+  color:rgba(255,208,96,.55);letter-spacing:.1em;
+  text-transform:uppercase;margin-bottom:.5rem;
+}
+.page-story-text{
+  font-family:'Baloo 2',cursive;font-size:1.15rem;
+  line-height:1.85;color:rgba(240,238,255,.9);
   text-align:center;
-  box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+.page-story-text em{
+  color:var(--gold);font-style:normal;font-weight:700;
 }
 
-.resumo-box h3{
-  margin:0;
-  font-size:14px;
-  color:#001e36;
+/* Scroll indicator */
+.scroll-hint{
+  position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:.3rem;
+  color:rgba(255,255,255,.3);font-size:.7rem;font-weight:700;letter-spacing:.08em;
+  animation:scrollBounce 2s ease-in-out infinite;
 }
+@keyframes scrollBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
 
-.resumo-num{
-  font-size:32px;
-  font-weight:bold;
-  margin-top:6px;
+/* ─── PLANET BADGE ─────────────────────────────────────────── */
+.planet-deco{
+  position:absolute;pointer-events:none;
+  border-radius:50%;
+  animation:planetOrbit 20s linear infinite;
 }
+@keyframes planetOrbit{from{transform:rotate(0deg) translateX(var(--orbit-r)) rotate(0deg)}to{transform:rotate(360deg) translateX(var(--orbit-r)) rotate(-360deg)}}
 
-.resumo-disponivel{ color:#16a34a; }
-.resumo-pausa{ color:#dc2626; }
-/* ===== Painel Lateral Histórico ===== */
-.historico-wrapper{
-  position:fixed;
-  top:80px;
-  right:-520px; /* começa escondido */
-  width:520px;
-  height:calc(100% - 100px);
-  background:#fff;
-  box-shadow:-10px 0 25px rgba(0,0,0,.15);
-  border-radius:16px 0 0 16px;
-  transition:right .35s ease;
-  z-index:1000;
-  overflow:auto;
+/* ─── RESPONSIVE ───────────────────────────────────────────── */
+@media(max-width:768px){
+  .hero-inner{grid-template-columns:1fr;text-align:center}
+  .hero-text{order:2}.hero-book{order:1}
+  .hero-btns{justify-content:center}
+  .hero-stats{justify-content:center}
+  .hero-sub{margin:0 auto 2rem}
+  .nav-links{display:none}
+  .book-scene{width:200px;height:260px}
 }
-
-/* painel aberto */
-.historico-wrapper.aberto{
-  right:0;
-}
-
-/* setinha */
-.historico-toggle{
-  position:fixed;
-  top:50%;
-  right:0;
-  transform:translateY(-50%);
-  background:#001e36;
-  color:#fff;
-  padding:12px 10px;
-  border-radius:12px 0 0 12px;
-  cursor:pointer;
-  font-size:18px;
-  z-index:1001;
-  box-shadow:-4px 0 10px rgba(0,0,0,.25);
-}
-
-.historico-toggle:hover{
-  background:#0b3c5d;
-}
-
 </style>
 </head>
-
 <body>
 
-<header>
-📞 Painel de Atendimento
-<button class="admin-btn" style="right:140px" onclick="toggleAusencias()">📅 Ausências</button>
-<button class="admin-btn" onclick="toggleAdmin()">🛠️ Admin</button>
-</header>
-<div class="admin-panel" id="ausenciasPanel" style="right:140px">
-<h2>📅 Ausências</h2>
-
-<select id="ausAnalista"></select><br><br>
-
-<select id="ausTipo">
-  <option value="Atestado">📄 Atestado</option>
-  <option value="Férias">🏖️ Férias</option>
-  <option value="Folga">🛌 Folga</option>
-  <option value="Licença">🧾 Licença</option>
-  <option value="Banco de Horas">⏱️ Banco de Horas</option>
-  <option value="Treinamento">📘 Treinamento</option>
-  <option value="Reunião Externa">👥 Reunião Externa</option>
-  <option value="Outros">❓ Outros</option>
-</select>
-<br><br>
-
-<input type="date" id="ausData"><br><br>
-
-<input type="time" id="ausInicio"> até
-<input type="time" id="ausFim"><br><br>
-
-<input id="ausMotivo" placeholder="Motivo"><br><br>
-
-<button onclick="salvarAusencia()">Salvar</button>
-<button onclick="exportarAusencias()">📤 Exportar</button>
-
-<table style="margin-top:15px">
-<thead>
-<tr>
-  <th>Analista</th>
-  <th>Tipo</th>
-  <th>Data</th>
-  <th>Horário</th>
-  <th>Motivo</th>
-<th>Ações</th>
-
-</tr>
-</thead>
-<tbody id="listaAusencias"></tbody>
-</table>
-
-<button class="close" onclick="toggleAusencias()">Fechar</button>
+<!-- Custom cursor -->
+<div id="cursor">
+  <svg viewBox="0 0 28 28" fill="none">
+    <circle cx="14" cy="14" r="12" fill="rgba(255,208,96,0.85)" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+    <text x="14" y="19" text-anchor="middle" font-size="12">🚀</text>
+  </svg>
 </div>
 
+<!-- Starfield -->
+<canvas id="starfield"></canvas>
 
-<div class="admin-panel" id="adminPanel">
+<!-- ─── NAV ───────────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-logo">✦ CosmicKids</div>
+  <ul class="nav-links">
+    <li><a href="#features">Recursos</a></li>
+    <li><a href="#preview">Prévia</a></li>
+    <li><a href="#pricing">Preços</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#" class="btn-nav" onclick="openReader()">📖 Ler Agora</a></li>
+  </ul>
+</nav>
 
-<h2>👤 Cadastro do Analista</h2>
-
-<input id="analistaNome" placeholder="Nome do Analista"><br><br>
-
-<select id="analistaCanal">
-<option value="">Canal</option>
-<option value="Telefone">📞 Telefone</option>
-<option value="Chat">💬 Chat</option>
-</select><br><br>
-
-<button onclick="cadastrarAnalista()">Salvar</button>
-
-
-<hr style="margin:15px 0">
-
-<button onclick="zerarTudoAderencia()" style="background:#0f766e;color:#fff;width:100%">
-🔄 Zerar aderência de TODOS
-</button>
-
-<br><br>
-
-<button onclick="zerarTudoPausas()" style="background:#7c2d12;color:#fff;width:100%">
-⏸️ Zerar pausas de TODOS
-</button>
-
-<div class="lista-analistas" id="listaAnalistas"></div>
-
-<button class="close" onclick="toggleAdmin()">Fechar</button>
-</div>
-
-<div class="container">
-
-<div class="card">
-<h2>⏸️ Controle de Pausas</h2>
-
-<select id="selectAnalista">
-<option value="">Selecione o analista</option>
-</select><br><br>
-
-<div class="pause-buttons">
-<button onclick="iniciarPausa('Almoço')">🍽️ Almoço</button>
-<button onclick="iniciarPausa('Reunião')">👥 Reunião</button>
-<button onclick="iniciarPausa('Treinamento')">📘 Treinamento</button>
-<button onclick="iniciarPausa('Banheiro')">🚻 Banheiro</button>
-<button onclick="iniciarPausa('Livre')">⏳ Livre</button>
-</div>
-
-<button onclick="finalizarPausa()" style="margin-top:15px;background:#b91c1c;color:#fff">
-Finalizar Pausa
-</button>
-<!-- ===== RESUMO DE ANALISTAS ===== -->
-<div class="resumo-pausas">
-  <div class="resumo-box">
-    <h3>👥 Total</h3>
-    <div class="resumo-num" id="totalAnalistas">0</div>
-  </div>
-
-  <div class="resumo-box">
-    <h3>🟢 Disponíveis</h3>
-    <div class="resumo-num resumo-disponivel" id="analistasDisponiveis">0</div>
-  </div>
-
-  <div class="resumo-box">
-    <h3>⏸️ Em Pausa</h3>
-    <div class="resumo-num resumo-pausa" id="analistasPausa">0</div>
-  </div>
-</div>
-
-</div>
-
-<div class="grid">
-
-<div class="card">
-<h2>📞 Fila Telefone</h2>
-<table>
-<thead>
-<tr><th>Analista</th><th>Pausa</th><th>Tempo</th></tr>
-</thead>
-<tbody id="filaTelefone"></tbody>
-</table>
-</div>
-
-<div class="card">
-<h2>💬 Fila Chat</h2>
-<table>
-<thead>
-<tr><th>Analista</th><th>Pausa</th><th>Tempo</th></tr>
-</thead>
-<tbody id="filaChat"></tbody>
-</table>
-</div>
-
-</div>
-
-<div class="card adm">
-<h2>🛠️ Painel Administrativo (Tempo Real)</h2>
-
-<div class="admin-actions">
-<button onclick="exportarDados()">📤 Exportar Dados</button>
-<button onclick="atualizarStatusPausas()">🔄 Atualizar Status</button>
-</div>
-
-<table>
-<thead>
-<tr>
-<th>Analista</th>
-<th>Canal</th>
-<th>Pausa Atual</th>
-<th>Tempo Atual</th>
-<th>Total Pausas</th>
-<th>Status</th>
-</tr>
-</thead>
-<tbody id="adminTabela"></tbody>
-</table>
-</div>
-<!-- ===== SETINHA ===== -->
-<div class="historico-toggle" onclick="toggleHistorico()">📊</div>
-
-<!-- ===== PAINEL LATERAL ===== -->
-<div class="historico-wrapper" id="painelHistorico">
-  <div class="card adm" style="margin:15px">
-    <h2>📊 Histórico de Pausas</h2>
-
-    <div style="display:flex;gap:10px;margin-bottom:10px">
-      <select id="filtroPeriodo">
-        <option value="dia">📅 Diário</option>
-        <option value="semana">📆 Semanal</option>
-        <option value="mes">🗓️ Mensal</option>
-      </select>
-
-      <button onclick="carregarHistorico()">🔍 Filtrar</button>
-      <button onclick="exportarHistorico()">📤 Exportar CSV</button>
+<!-- ─── HERO ──────────────────────────────────────────────────────── -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-badge"><span>🌟</span> E-book Infantil Premium</div>
+      <h1>Noah e o Planeta dos Sonhos</h1>
+      <p class="hero-sub">Uma aventura mágica pelo universo para crianças de 3 a 8 anos. Planetas fofos, estrelas dançantes e um astronautinha que vai fazer seu filho sorrir antes de dormir.</p>
+      <div class="hero-btns">
+        <a href="#" class="btn-primary" onclick="openReader();return false">
+          📖 Ler Gratuitamente
+        </a>
+        <a href="#pricing" class="btn-secondary">
+          ✦ Ver Planos
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-num">40</div><div class="stat-label">Páginas</div></div>
+        <div class="stat"><div class="stat-num">4.9★</div><div class="stat-label">Avaliação</div></div>
+        <div class="stat"><div class="stat-num">12k+</div><div class="stat-label">Leitores</div></div>
+      </div>
     </div>
-
-    <table>
-      <thead>
-        <tr>
-          <th>Analista</th>
-          <th>Canal</th>
-          <th>Tipo de Pausa</th>
-          <th>Qtd Pausas</th>
-          <th>Tempo Total</th>
-        </tr>
-      </thead>
-      <tbody id="tabelaHistorico"></tbody>
-    </table>
+    <div class="hero-book">
+      <div class="book-scene">
+        <div class="book-glow"></div>
+        <div class="book-3d">
+          <div class="book-face">
+            <div class="book-stars-deco" id="bookStars"></div>
+            <div class="book-planet"></div>
+            <div class="book-noah">👨‍🚀</div>
+            <div class="book-title">Noah e o Planeta dos Sonhos</div>
+          </div>
+          <div class="book-spine"></div>
+        </div>
+      </div>
+    </div>
   </div>
+</section>
+
+<!-- ─── FEATURES ──────────────────────────────────────────────────── -->
+<section id="features">
+  <h2 class="section-title reveal">Por que as crianças amam? ✨</h2>
+  <p class="section-sub reveal">Tudo pensado para criar momentos mágicos</p>
+  <div class="features-grid">
+    <div class="feature-card reveal" style="transition-delay:.05s">
+      <span class="feature-icon">🎨</span>
+      <h3>Ilustrações Cinematográficas</h3>
+      <p>Arte estilo Disney Pixar 3D com iluminação quente e personagens ultra-expressivos que saltam da tela.</p>
+    </div>
+    <div class="feature-card reveal" style="transition-delay:.15s">
+      <span class="feature-icon">✨</span>
+      <h3>Animações Mágicas</h3>
+      <p>Cada página ganha vida com estrelas brilhantes, planetas girando e efeitos de luz que encantam.</p>
+    </div>
+    <div class="feature-card reveal" style="transition-delay:.25s">
+      <span class="feature-icon">😴</span>
+      <h3>Ritual de Dormir</h3>
+      <p>História calmante que leva a criança numa jornada relaxante pelo cosmos antes de adormecer.</p>
+    </div>
+    <div class="feature-card reveal" style="transition-delay:.35s">
+      <span class="feature-icon">📱</span>
+      <h3>Funciona em Tudo</h3>
+      <p>Celular, tablet, computador — a experiência é perfeita em qualquer tela, a qualquer hora.</p>
+    </div>
+    <div class="feature-card reveal" style="transition-delay:.45s">
+      <span class="feature-icon">🔊</span>
+      <h3>Narração em Breve</h3>
+      <p>Em breve: voz infantil narrando cada página com música ambiente espacial suave.</p>
+    </div>
+    <div class="feature-card reveal" style="transition-delay:.55s">
+      <span class="feature-icon">💛</span>
+      <h3>Valores Positivos</h3>
+      <p>Coragem, curiosidade e afeto — Noah ensina que o universo é um lugar seguro e maravilhoso.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PREVIEW ────────────────────────────────────────────────────── -->
+<section id="preview">
+  <h2 class="section-title reveal">Prévia do Livro 🌌</h2>
+  <p class="section-sub reveal">Deslize para ver as páginas</p>
+  <div class="pages-showcase" id="pagesShowcase"></div>
+</section>
+
+<!-- ─── PRICING ───────────────────────────────────────────────────── -->
+<section id="pricing">
+  <h2 class="section-title reveal">Escolha sua Aventura 🚀</h2>
+  <p class="section-sub reveal">Invista em momentos mágicos</p>
+  <div class="pricing-grid">
+    <div class="price-card reveal reveal-left">
+      <div class="price-name">Explorador</div>
+      <div class="price-amount">Grátis</div>
+      <div class="price-period">Primeiros 5 capítulos</div>
+      <ul class="price-features">
+        <li>5 páginas da história</li>
+        <li>Animações básicas</li>
+        <li>Leitura online</li>
+      </ul>
+      <a href="#" class="btn-price outline" onclick="openReader();return false">Começar Grátis</a>
+    </div>
+    <div class="price-card featured reveal" style="transition-delay:.1s">
+      <div class="price-name">Astronauta</div>
+      <div class="price-amount">R$19</div>
+      <div class="price-period">acesso vitalício</div>
+      <ul class="price-features">
+        <li>40 páginas completas</li>
+        <li>Todas as animações</li>
+        <li>Download em PDF</li>
+        <li>Atualizações gratuitas</li>
+        <li>Certificado de leitura</li>
+      </ul>
+      <a href="#" class="btn-price main">Quero Ser Astronauta 🚀</a>
+    </div>
+    <div class="price-card reveal reveal-right" style="transition-delay:.2s">
+      <div class="price-name">Família Galáctica</div>
+      <div class="price-amount">R$35</div>
+      <div class="price-period">para até 4 crianças</div>
+      <ul class="price-features">
+        <li>Tudo do Astronauta</li>
+        <li>4 perfis de criança</li>
+        <li>Próximos 2 livros grátis</li>
+        <li>Modo narração incluso</li>
+        <li>Suporte prioritário</li>
+      </ul>
+      <a href="#" class="btn-price outline">Família Galáctica 🌟</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── REVIEWS ────────────────────────────────────────────────────── -->
+<section id="reviews">
+  <h2 class="section-title reveal">O que as famílias dizem 💬</h2>
+  <p class="section-sub reveal">Mais de 12.000 crianças já viajaram com Noah</p>
+  <div class="reviews-grid">
+    <div class="review-card reveal" style="transition-delay:.05s">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Minha filha de 5 anos pediu para ler toda noite por duas semanas seguidas. As animações são lindíssimas e ela adora o Noah!"</p>
+      <div class="review-author">
+        <div class="review-avatar">👩</div>
+        <div><div class="review-name">Ana Paula M.</div><div class="review-role">Mãe de Isabela, 5 anos</div></div>
+      </div>
+    </div>
+    <div class="review-card reveal" style="transition-delay:.15s">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Incrível! Os planetas são tão detalhados e fofos. Meu filho ficou fascinado com o universo depois desse livro. Valeu cada centavo!"</p>
+      <div class="review-author">
+        <div class="review-avatar">👨</div>
+        <div><div class="review-name">Carlos Eduardo</div><div class="review-role">Pai do Miguel, 7 anos</div></div>
+      </div>
+    </div>
+    <div class="review-card reveal" style="transition-delay:.25s">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Uso na sala de aula como ritual de encerramento. As crianças ficam completamente absortas — silêncio total! Recomendo a todos os professores."</p>
+      <div class="review-author">
+        <div class="review-avatar">👩‍🏫</div>
+        <div><div class="review-name">Profª Renata S.</div><div class="review-role">Educadora Infantil</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA ────────────────────────────────────────────────────────── -->
+<section id="cta">
+  <h2 class="reveal">Comece a aventura hoje 🌟</h2>
+  <p class="reveal">Cada noite pode ser uma viagem mágica pelo cosmos. Noah está pronto para decolar com seu filho!</p>
+  <div class="reveal">
+    <a href="#" class="btn-primary" style="font-size:1.1rem;padding:1rem 2.5rem" onclick="openReader();return false">
+      🚀 Ler o Livro Agora — Grátis
+    </a>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─────────────────────────────────────────────────────── -->
+<footer>
+  <p>✦ CosmicKids Books &nbsp;·&nbsp; Feito com 💛 para pequenos exploradores &nbsp;·&nbsp; 2024</p>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     READING OVERLAY
+════════════════════════════════════════════════════════════════════ -->
+<div id="reading-overlay">
+  <div class="reader-nav">
+    <div class="reader-title">📖 Noah e o Planeta dos Sonhos</div>
+    <div class="reader-controls">
+      <button class="reader-btn" onclick="scrollReaderTo('prev')">← Anterior</button>
+      <span id="reader-page-indicator" style="font-size:.82rem;color:rgba(255,255,255,.45);font-weight:700">Pág 1 / 10</span>
+      <button class="reader-btn" onclick="scrollReaderTo('next')">Próxima →</button>
+      <button class="reader-btn close-btn" onclick="closeReader()">✕ Fechar</button>
+    </div>
+  </div>
+  <div class="reader-progress-bar"><div class="reader-progress-fill" id="readerProgress"></div></div>
+  <div class="reader-pages" id="readerPages"></div>
 </div>
 
 <script>
-let ausenciaEditando = null;
-const analistas = {};
-
-function toggleAdmin(){ adminPanel.style.display = adminPanel.style.display==="block"?"none":"block"; }
-function formatarMinSec(s){ return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0"); }
-function formatarHora(s){ return String(Math.floor(s/3600)).padStart(2,"0")+":"+String(Math.floor((s%3600)/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0"); }
-
-// -------- CRUD --------
-function cadastrarAnalista(){
-  const nome = analistaNome.value.trim();
-  const canal = analistaCanal.value;
-  if(!nome || !canal) return alert("Informe nome e canal");
-
-  Backendless.Data.of("AnalistasPausa").save({
-    nome, canal, pausaAtual:null, inicioPausa:null, totalTempo:0, aderencia:100
-  }).then(a=>{
-    analistas[a.objectId]=a;
-    atualizarTudo();
-  });
-
-  analistaNome.value="";
-  analistaCanal.value="";
+/* ═══════════════════════════════════════════════════════════ STARS */
+const starCanvas = document.getElementById('starfield');
+const sCtx = starCanvas.getContext('2d');
+let stars = [];
+function initStars(){
+  starCanvas.width = window.innerWidth;
+  starCanvas.height = window.innerHeight;
+  stars = Array.from({length:200},()=>({
+    x:Math.random()*starCanvas.width,
+    y:Math.random()*starCanvas.height,
+    r:Math.random()*1.8+.3,
+    alpha:Math.random(),
+    speed:Math.random()*.008+.002,
+    phase:Math.random()*Math.PI*2
+  }));
 }
+let sTime = 0;
+function animStars(){
+  sCtx.clearRect(0,0,starCanvas.width,starCanvas.height);
+  sTime += .016;
+  stars.forEach(s=>{
+    const a = .3+.7*(.5+.5*Math.sin(s.phase+sTime*s.speed*60));
+    sCtx.globalAlpha = a;
+    sCtx.fillStyle = '#fffff0';
+    sCtx.beginPath();
+    sCtx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    sCtx.fill();
+  });
+  sCtx.globalAlpha = 1;
+  requestAnimationFrame(animStars);
+}
+initStars();
+animStars();
+window.addEventListener('resize',initStars);
 
-// -------- AÇÕES ADMIN --------
-function excluirAnalista(id){
-  if(confirm("Excluir analista?")){
-    Backendless.Data.of("AnalistasPausa").remove({objectId:id});
+/* ═══════════════════════════════════════════════════════ PARTICLES */
+function spawnParticles(){
+  const colors=['#ffd060','#4488ff','#ff66bb','#22ccaa','#a855f7','#ff8844'];
+  for(let i=0;i<22;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    const size=Math.random()*8+3;
+    p.style.cssText=`
+      width:${size}px;height:${size}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      left:${Math.random()*100}vw;
+      bottom:-20px;
+      animation-duration:${Math.random()*12+8}s;
+      animation-delay:${Math.random()*10}s;
+    `;
+    document.body.appendChild(p);
   }
 }
-function zerarAderencia(id){
-  Backendless.Data.of("AnalistasPausa").save({objectId:id, aderencia:100});
-}
-function zerarPausas(id){
-  Backendless.Data.of("AnalistasPausa").save({objectId:id, totalTempo:0});
-}
+spawnParticles();
 
-// ===== ZERAR GERAL =====
-function zerarTudoAderencia(){
-  if(!confirm("Deseja zerar a ADERÊNCIA de TODOS os analistas?")) return;
-
-  Object.values(analistas).forEach(a=>{
-    a.aderencia = 100;
-    Backendless.Data.of("AnalistasPausa").save({
-      objectId: a.objectId,
-      aderencia: 100
-    });
-  });
-
-  atualizarTudo();
-}
-
-function zerarTudoPausas(){
-  if(!confirm("Deseja zerar o TEMPO DE PAUSAS de TODOS os analistas?")) return;
-
-  Object.values(analistas).forEach(a=>{
-    a.totalTempo = 0;
-    a.pausaAtual = null;
-    a.inicioPausa = null;
-
-    Backendless.Data.of("AnalistasPausa").save({
-      objectId: a.objectId,
-      totalTempo: 0,
-      pausaAtual: null,
-      inicioPausa: null
-    });
-  });
-
-  atualizarTudo();
-}
-
-
-// -------- PAUSAS --------
-function iniciarPausa(tipo){
-  const nome = selectAnalista.value;
-  if(!nome) return alert("Selecione o analista");
-  const a = Object.values(analistas).find(x=>x.nome===nome);
-  if(!a || a.pausaAtual) return alert("Analista já está em pausa");
-
-  a.pausaAtual = tipo;
-  a.inicioPausa = Date.now();
-  atualizarTudo();
-  Backendless.Data.of("AnalistasPausa").save({objectId:a.objectId, pausaAtual:tipo, inicioPausa:a.inicioPausa});
-}
-
-function finalizarPausa(){
-  const nome = selectAnalista.value;
-  if(!nome) return alert("Selecione o analista");
-
-  const a = Object.values(analistas).find(x=>x.nome===nome);
-  if(!a || !a.pausaAtual) return alert("Analista não está em pausa");
-
-  const fim = Date.now();
-  const dur = Math.floor((fim - a.inicioPausa) / 1000);
-
-  // 🔥 SALVA HISTÓRICO
-  Backendless.Data.of("HistoricoPausas").save({
-    analista: a.nome,
-    canal: a.canal,
-    tipoPausa: a.pausaAtual,
-    inicio: a.inicioPausa,
-    fim: fim,
-    duracao: dur,
-    data: new Date() // 👈 CAMPO QUE ESTAVA FALTANDO
-  });
-
-  // ===== lógica atual =====
-  if(
-  a.pausaAtual === "Banheiro" ||
-  a.pausaAtual === "Livre" ||
-  a.pausaAtual === "Almoço" ||
-  a.pausaAtual === "Reunião" ||
-  a.pausaAtual === "Treinamento"
-){
-    a.aderencia = Math.max(0, a.aderencia - Math.floor(dur / 270));
-  }
-
-  a.totalTempo = (a.totalTempo || 0) + dur;
-  a.pausaAtual = null;
-  a.inicioPausa = null;
-
-  Backendless.Data.of("AnalistasPausa").save(a);
-  atualizarTudo();
-}
-
-
-// -------- EXPORTAR --------
-function exportarDados(){
-  let csv = "Analista,Canal,Pausa Atual,Tempo Atual,Total Pausas,Aderência\n";
-  Object.values(analistas).forEach(a=>{
-    const tempoAtual = a.pausaAtual ? formatarMinSec(Math.floor((Date.now()-a.inicioPausa)/1000)) : "-";
-    csv += `${a.nome},${a.canal},${a.pausaAtual||"-"},${tempoAtual},${formatarHora(a.totalTempo||0)},${a.aderencia||100}%\n`;
-  });
-
-  const blob = new Blob([csv], {type:"text/csv"});
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "painel_pausas.csv";
-  link.click();
-}
-
-// -------- ATUALIZAR STATUS --------
-function atualizarStatusPausas(){
-  Backendless.Data.of("AnalistasPausa").find().then(res=>{
-    res.forEach(a=>analistas[a.objectId]=a);
-    atualizarTudo();
-  });
-}
-
-// -------- ATUALIZAR --------
-function atualizarTudo(){
-  selectAnalista.innerHTML=`<option value="">Selecione o analista</option>`;
-  filaTelefone.innerHTML=""; filaChat.innerHTML=""; adminTabela.innerHTML="";
-  listaAnalistas.innerHTML="";
-
-  Object.values(analistas).forEach(a=>{
-    selectAnalista.innerHTML+=`<option>${a.nome}</option>`;
-
-    if(a.pausaAtual){
-      const tempo=Math.floor((Date.now()-a.inicioPausa)/1000);
-      const linha=`<tr><td>${a.nome}</td><td>${a.pausaAtual}</td><td>${formatarMinSec(tempo)}</td></tr>`;
-      a.canal==="Telefone"?filaTelefone.innerHTML+=linha:filaChat.innerHTML+=linha;
-    }
-
-    adminTabela.innerHTML+=`
-    <tr>
-      <td>${a.nome}</td>
-      <td><span class="badge ${a.canal.toLowerCase()}">${a.canal}</span></td>
-      <td>${a.pausaAtual||"-"}</td>
-      <td>${a.pausaAtual?formatarMinSec(Math.floor((Date.now()-a.inicioPausa)/1000)):"-"}</td>
-      <td><strong>${formatarHora(a.totalTempo||0)}</strong></td>
-      <td class="status ${a.pausaAtual?"vermelho":"verde"}">
-        <span class="bolinha ${a.pausaAtual?"vermelho":"verde"}"></span>
-        ${a.pausaAtual?"Em pausa":"Disponível"} | Aderência: ${a.aderencia||100}%
-      </td>
-    </tr>`;
-
-    listaAnalistas.innerHTML+=`
-    <div>
-      <span>${a.nome}</span>
-      <div>
-        <button onclick="zerarAderencia('${a.objectId}')">Aderência</button>
-        <button onclick="zerarPausas('${a.objectId}')">Pausas</button>
-        <button onclick="excluirAnalista('${a.objectId}')" style="background:#dc2626;color:#fff">Excluir</button>
-      </div>
-    </div>`;
-  });
-  // ===== RESUMO DE DISPONIBILIDADE =====
-  const total = Object.values(analistas).length;
-  const emPausa = Object.values(analistas).filter(a => a.pausaAtual).length;
-  const disponiveis = total - emPausa;
-
-  document.getElementById("totalAnalistas").innerText = total;
-  document.getElementById("analistasDisponiveis").innerText = disponiveis;
-  document.getElementById("analistasPausa").innerText = emPausa;
-
-}
-
-// -------- LOAD + REALTIME --------
-Backendless.Data.of("AnalistasPausa").find().then(res=>{
-  res.forEach(a=>analistas[a.objectId]=a);
-  atualizarTudo();
+/* ═══════════════════════════════════════════════════════ CURSOR */
+const cur = document.getElementById('cursor');
+document.addEventListener('mousemove',e=>{
+  cur.style.left = e.clientX+'px';
+  cur.style.top  = e.clientY+'px';
 });
 
-Backendless.Data.of("AnalistasPausa").RT()
-.subscribe(Backendless.Data.SubscriptionMode.CREATE, r=>{analistas[r.object.objectId]=r.object; atualizarTudo();})
-.subscribe(Backendless.Data.SubscriptionMode.UPDATE, r=>{analistas[r.object.objectId]=r.object; atualizarTudo();})
-.subscribe(Backendless.Data.SubscriptionMode.DELETE, r=>{delete analistas[r.object.objectId]; atualizarTudo();});
+/* ═══════════════════════════════════════════════════════ SCROLL REVEAL */
+const revEls = document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale');
+const revObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const el = e.target;
+      const delay = parseFloat(el.style.transitionDelay||0)*1000;
+      setTimeout(()=>el.classList.add('visible'),delay > 0 ? 0 : 60);
+      revObs.unobserve(el);
+    }
+  });
+},{threshold:.15});
+revEls.forEach(el=>revObs.observe(el));
 
-requestAnimationFrame(function loop(){ atualizarTudo(); requestAnimationFrame(loop); });
-
-// ===== AUSÊNCIAS =====
-function toggleAusencias(){
-  ausenciasPanel.style.display =
-    ausenciasPanel.style.display === "block" ? "none" : "block";
-  carregarAnalistasAusencias();
-  listarAusencias();
+/* ═══════════════════════════════════════════ BOOK STARS DECORATION */
+const bs = document.getElementById('bookStars');
+for(let i=0;i<18;i++){
+  const s=document.createElement('div');
+  s.style.cssText=`
+    position:absolute;width:2px;height:2px;background:white;border-radius:50%;
+    left:${Math.random()*100}%;top:${Math.random()*100}%;
+    animation:twinkle ${1+Math.random()*2}s ${Math.random()*2}s infinite;
+  `;
+  bs.appendChild(s);
 }
 
-function carregarAnalistasAusencias(){
-  ausAnalista.innerHTML = `<option value="">Selecione o analista</option>`;
-  Object.values(analistas).forEach(a=>{
-    ausAnalista.innerHTML += `<option>${a.nome}</option>`;
+/* ═══════════════════════════════════════════════ PAGE THUMBS MINI */
+const storyPages = [
+  {title:'Decolar',bg:['#04061a','#0d1245'],planet:{x:.7,y:.6,r:.22,c:'#4488ff'},emoji:'👨‍🚀'},
+  {title:'Via Láctea',bg:['#06041a','#130d2a'],planet:{x:.65,y:.55,r:.28,c:'#a855f7'},emoji:'🌌'},
+  {title:'Planeta Azul',bg:['#030d1a','#0a1840'],planet:{x:.6,y:.5,r:.32,c:'#2266cc'},emoji:'🌍'},
+  {title:'Planeta Rosa',bg:['#120418','#2a0828'],planet:{x:.55,y:.58,r:.28,c:'#ff66bb'},emoji:'🌸'},
+  {title:'Cometa',bg:['#04061a','#050e20'],planet:null,emoji:'☄️'},
+  {title:'Nebulosa',bg:['#0a041a','#180835'],planet:{x:.5,y:.55,r:.25,c:'#8844ee'},emoji:'🌠'},
+  {title:'Planeta Verde',bg:['#030a04','#081408'],planet:{x:.65,y:.55,r:.3,c:'#22aa44'},emoji:'🌿'},
+  {title:'Baleias Luz',bg:['#04061a','#0d1240'],planet:null,emoji:'🐋'},
+  {title:'Voltando',bg:['#03080f','#070d1e'],planet:{x:.5,y:.3,r:.2,c:'#3377ff'},emoji:'🏠'},
+  {title:'Boa Noite',bg:['#030408','#06080f'],planet:{x:.75,y:.7,r:.15,c:'#4488ff'},emoji:'😴'},
+];
+const showcase = document.getElementById('pagesShowcase');
+storyPages.forEach((pg,i)=>{
+  const thumb = document.createElement('div');
+  thumb.className = 'page-thumb reveal';
+  thumb.style.transitionDelay = (i*.07)+'s';
+  thumb.innerHTML = `
+    <canvas width="200" height="270"></canvas>
+    <div class="page-num-badge">Pág ${i+1}</div>
+    <div class="page-thumb-label">${pg.title}</div>
+  `;
+  thumb.addEventListener('click',()=>{ openReader(); setTimeout(()=>scrollReaderToPage(i),300); });
+  showcase.appendChild(thumb);
+  // Draw mini canvas
+  const cv = thumb.querySelector('canvas');
+  const ctx = cv.getContext('2d');
+  // bg gradient
+  const gr = ctx.createLinearGradient(0,0,0,270);
+  gr.addColorStop(0,pg.bg[0]); gr.addColorStop(1,pg.bg[1]);
+  ctx.fillStyle=gr; ctx.fillRect(0,0,200,270);
+  // mini stars
+  for(let s=0;s<50;s++){
+    ctx.globalAlpha=Math.random()*.8+.2;
+    ctx.fillStyle='#fffff0';
+    ctx.beginPath();ctx.arc(Math.random()*200,Math.random()*270,Math.random()*1.5+.3,0,Math.PI*2);ctx.fill();
+  }
+  ctx.globalAlpha=1;
+  // planet
+  if(pg.planet){
+    const px=pg.planet.x*200,py=pg.planet.y*270,pr=pg.planet.r*120;
+    const gp=ctx.createRadialGradient(px-pr*.3,py+pr*.3,pr*.1,px,py,pr);
+    gp.addColorStop(0,pg.planet.c+'ff'); gp.addColorStop(1,pg.planet.c+'44');
+    ctx.globalAlpha=.9;
+    ctx.fillStyle=gp; ctx.beginPath();ctx.arc(px,py,pr,0,Math.PI*2);ctx.fill();
+    ctx.globalAlpha=.25;
+    ctx.strokeStyle='rgba(255,255,255,.6)'; ctx.lineWidth=3;
+    ctx.beginPath();ctx.ellipse(px,py,pr*1.5,pr*.4,0,0,Math.PI*2);ctx.stroke();
+    ctx.globalAlpha=1;
+  }
+  // emoji
+  ctx.font=`${36}px serif`;
+  ctx.globalAlpha=.85;
+  ctx.fillText(pg.emoji,90,155);
+  ctx.globalAlpha=1;
+});
+
+/* ══════════════════════════════════════════════════════ READER */
+const READER_PAGES = [
+  {
+    bg:['#04061a','#0d1245','#1a0835'],
+    planet:{cx:.75,cy:.38,r:.22,color:'#4488ff',ring:true},
+    nebula:{x:.5,y:.6,r:.6,color:'rgba(68,136,255,.08)'},
+    text:'Era uma noite muito especial.\nNoah colocou seu <em>pijama espacial</em> e\napertou a mochila luminosa.',
+    title:'A Grande Partida 🚀',
+    emoji:'👨‍🚀',emojiX:.38,emojiY:.55,emojiSize:80
+  },
+  {
+    bg:['#04061a','#130d2a','#06041a'],
+    planet:{cx:.5,cy:.35,r:.35,color:'#a855f7',ring:true,stripes:true},
+    nebula:{x:.5,y:.55,r:.5,color:'rgba(168,85,247,.1)'},
+    text:'A mochila brilhou forte\ne Noah subiu pelos ares,\nentre <em>nuvens de estrelinhas</em>.',
+    title:'Decolando! ✨',
+    emoji:'🌌',emojiX:.5,emojiY:.58,emojiSize:60
+  },
+  {
+    bg:['#03080e','#060e1a','#020a18'],
+    planet:{cx:.68,cy:.38,r:.28,color:'#2266dd',stripes:true},
+    text:'O Planeta Azul chamou Noah\ncom seus <em>oceanos de luz</em>\ne nuvens suaves como algodão.',
+    title:'O Planeta Azul 🌊',
+    emoji:'🌍',emojiX:.3,emojiY:.55,emojiSize:72
+  },
+  {
+    bg:['#0a0412','#1a0828','#0a0420'],
+    planet:{cx:.65,cy:.36,r:.26,color:'#ff66bb',ring:true},
+    nebula:{x:.5,y:.5,r:.55,color:'rgba(255,102,187,.07)'},
+    text:'O Planeta Rosa tinha anéis\nfeitos de <em>pétalas congeladas</em>.\nEra o mais delicado de todos.',
+    title:'Planeta Rosa 🌸',
+    emoji:'🌷',emojiX:.32,emojiY:.56,emojiSize:68
+  },
+  {
+    bg:['#04061a','#060e20','#030812'],
+    planet:null,
+    comet:true,
+    text:'Um cometa passou rápido!\nSua <em>cauda de luz azul</em>\nbrilhou por todo o céu.',
+    title:'O Cometa ☄️',
+    emoji:'☄️',emojiX:.6,emojiY:.38,emojiSize:90
+  },
+  {
+    bg:['#06031a','#0e0428','#050218'],
+    planet:{cx:.5,cy:.38,r:.3,color:'#8844ee'},
+    nebula:{x:.5,y:.5,r:.6,color:'rgba(136,68,238,.12)'},
+    text:'Entrou numa <em>nebulosa roxa</em>\ncheinha de gás luminoso.\nEra como nadar em luz!',
+    title:'A Nebulosa Mágica 🌠',
+    emoji:'✨',emojiX:.5,emojiY:.6,emojiSize:60
+  },
+  {
+    bg:['#020804','#050e06','#020604'],
+    planet:{cx:.66,cy:.38,r:.28,color:'#22aa44',stripes:true,spots:true},
+    nebula:{x:.5,y:.55,r:.5,color:'rgba(34,170,68,.07)'},
+    text:'O Planeta Verde era coberto\nde <em>florestas de cristal azul</em>\ne rios de luz esmeralda.',
+    title:'Planeta Verde 🌿',
+    emoji:'🌲',emojiX:.3,emojiY:.55,emojiSize:70
+  },
+  {
+    bg:['#04061a','#0a0e28','#030514'],
+    planet:null,
+    text:'Baleias de luz passaram nadando!\n<em>Grandes, suaves e luminosas</em>,\ncantando canções de ninar cósmicas.',
+    title:'Baleias de Luz 🐋',
+    emoji:'🐳',emojiX:.5,emojiY:.45,emojiSize:100
+  },
+  {
+    bg:['#03060e','#060a18','#040810'],
+    planet:{cx:.5,cy:.28,r:.18,color:'#3377ff'},
+    text:'Era hora de voltar.\nA mochila piscou três vezes:\n<em>"Combustível de sonhos ainda cheio!"</em>',
+    title:'Voltando para Casa 🏠',
+    emoji:'🏠',emojiX:.5,emojiY:.58,emojiSize:64
+  },
+  {
+    bg:['#020305','#040608','#020305'],
+    planet:{cx:.72,cy:.72,r:.14,color:'#4488ff'},
+    text:'Noah fechou os olhos devagar...\ncom o <em>universo inteiro no coração</em>.\nBoa noite, pequeno astronauta.',
+    title:'Boa Noite, Noah 😴',
+    emoji:'😴',emojiX:.44,emojiY:.48,emojiSize:76
+  },
+];
+
+function buildReaderPages(){
+  const container = document.getElementById('readerPages');
+  container.innerHTML = '';
+  READER_PAGES.forEach((pg,idx)=>{
+    const div = document.createElement('div');
+    div.className = 'reader-page';
+    div.id = 'rpage-'+idx;
+
+    // Canvas background
+    const bgCv = document.createElement('canvas');
+    bgCv.className = 'page-bg';
+    bgCv.width = window.innerWidth;
+    bgCv.height = window.innerHeight;
+    div.appendChild(bgCv);
+    drawPageBg(bgCv, pg);
+
+    // Content
+    const lines = pg.text.split('\n');
+    const textHTML = lines.map(l=>`<p class="page-story-text">${l}</p>`).join('');
+    div.innerHTML += `
+      <div class="page-content">
+        <div class="page-illustration">
+          <canvas width="480" height="360" class="illus-cv" data-page="${idx}"></canvas>
+        </div>
+        <div class="page-text-block" id="ptb-${idx}">
+          <div class="page-number">✦ Página ${idx+1} de ${READER_PAGES.length} ✦</div>
+          <h3 style="font-family:'Fredoka One',cursive;color:var(--gold);text-align:center;margin-bottom:.8rem;font-size:1.3rem">${pg.title}</h3>
+          ${textHTML}
+        </div>
+      </div>
+      ${idx < READER_PAGES.length-1 ? '<div class="scroll-hint">▼ CONTINUAR</div>' : ''}
+    `;
+    container.appendChild(div);
+
+    // Draw illustration
+    setTimeout(()=>{
+      const icv = div.querySelector('.illus-cv');
+      if(icv) drawIllustration(icv, pg, idx);
+    }, 50);
   });
 }
 
-function salvarAusencia(){
-  if(!ausAnalista.value || !ausData.value)
-    return alert("Preencha analista e data");
-
-  const dados = {
-    analista: ausAnalista.value,
-    tipo: ausTipo.value,
-    data: ausData.value,
-    inicio: ausInicio.value,
-    fim: ausFim.value,
-    motivo: ausMotivo.value
-  };
-
-  // EDITAR
-  if(ausenciaEditando){
-    dados.objectId = ausenciaEditando;
-    Backendless.Data.of("Ausencias").save(dados).then(()=>{
-      ausenciaEditando = null;
-      limparFormularioAusencias();
-      listarAusencias();
-    });
+function drawPageBg(cv, pg){
+  const ctx = cv.getContext('2d');
+  const W2 = cv.width, H2 = cv.height;
+  const gr = ctx.createLinearGradient(0,0,0,H2);
+  (pg.bg||['#04061a','#0d1245']).forEach((c,i,a)=>gr.addColorStop(i/(a.length-1),c));
+  ctx.fillStyle=gr; ctx.fillRect(0,0,W2,H2);
+  // Stars
+  for(let i=0;i<120;i++){
+    ctx.globalAlpha=Math.random()*.8+.2;
+    ctx.fillStyle='rgba(255,255,240,'+(Math.random()*.9+.1)+')';
+    ctx.beginPath();ctx.arc(Math.random()*W2,Math.random()*H2,Math.random()*1.6+.3,0,Math.PI*2);ctx.fill();
   }
-  // NOVO
-  else{
-    Backendless.Data.of("Ausencias").save(dados).then(()=>{
-      limparFormularioAusencias();
-      listarAusencias();
-    });
+  ctx.globalAlpha=1;
+  // Nebula
+  if(pg.nebula){
+    const gn = ctx.createRadialGradient(pg.nebula.x*W2,pg.nebula.y*H2,0,pg.nebula.x*W2,pg.nebula.y*H2,pg.nebula.r*Math.max(W2,H2));
+    gn.addColorStop(0,pg.nebula.color); gn.addColorStop(1,'transparent');
+    ctx.fillStyle=gn; ctx.fillRect(0,0,W2,H2);
   }
 }
-function limparFormularioAusencias(){
-  ausMotivo.value="";
-  ausInicio.value="";
-  ausFim.value="";
-  ausData.value="";
-  ausenciaEditando = null;
-}
 
-
-function listarAusencias(){
-  Backendless.Data.of("Ausencias").find().then(res=>{
-    listaAusencias.innerHTML="";
-    res.forEach(a=>{
-      listaAusencias.innerHTML += `
-      <tr>
-        <td>${a.analista}</td>
-        <td>${a.tipo}</td>
-        <td>${a.data}</td>
-        <td>${a.inicio||"-"} - ${a.fim||"-"}</td>
-        <td>${a.motivo||"-"}</td>
-        <td>
-          <button onclick="editarAusencia('${a.objectId}')">🖊️</button>
-          <button onclick="excluirAusencia('${a.objectId}')" style="background:#dc2626;color:#fff">🗑️</button>
-        </td>
-      </tr>`;
-    });
-  });
-}
-
-
-function exportarAusencias(){
-  Backendless.Data.of("Ausencias").find().then(res=>{
-    let csv="Analista,Tipo,Data,Inicio,Fim,Motivo\n";
-    res.forEach(a=>{
-      csv+=`${a.analista},${a.tipo},${a.data},${a.inicio},${a.fim},${a.motivo}\n`;
-    });
-    const blob=new Blob([csv],{type:"text/csv"});
-    const link=document.createElement("a");
-    link.href=URL.createObjectURL(blob);
-    link.download="ausencias.csv";
-    link.click();
-  });
-}
-function editarAusencia(id){
-  Backendless.Data.of("Ausencias").findById(id).then(a=>{
-    ausAnalista.value = a.analista;
-    ausTipo.value = a.tipo;
-    ausData.value = a.data;
-    ausInicio.value = a.inicio;
-    ausFim.value = a.fim;
-    ausMotivo.value = a.motivo;
-    ausenciaEditando = a.objectId;
-  });
-}
-
-function excluirAusencia(id){
-  if(confirm("Deseja excluir esta ausência?")){
-    Backendless.Data.of("Ausencias").remove({objectId:id})
-      .then(()=>listarAusencias());
+function drawIllustration(cv, pg, idx){
+  const ctx = cv.getContext('2d');
+  const W2=cv.width, H2=cv.height;
+  // Bg
+  const gr = ctx.createLinearGradient(0,0,0,H2);
+  (pg.bg||['#04061a','#0d1245']).forEach((c,i,a)=>gr.addColorStop(i/(a.length-1),c));
+  ctx.fillStyle=gr; ctx.fillRect(0,0,W2,H2);
+  // Stars
+  for(let i=0;i<70;i++){
+    ctx.globalAlpha=Math.random()*.9+.1;
+    ctx.fillStyle='#fffff0';
+    ctx.beginPath();ctx.arc(Math.random()*W2,Math.random()*H2*.7,Math.random()*1.8+.4,0,Math.PI*2);ctx.fill();
   }
-}
-function carregarHistorico(){
-  const periodo = filtroPeriodo.value;
-  let inicio = new Date();
-
-  if(periodo === "dia"){
-    inicio.setHours(0,0,0,0);
+  ctx.globalAlpha=1;
+  // Comet special
+  if(pg.comet){
+    ctx.globalAlpha=.9;
+    const grad=ctx.createLinearGradient(W2*.1,H2*.3,W2*.8,H2*.5);
+    grad.addColorStop(0,'rgba(100,180,255,0)');
+    grad.addColorStop(.7,'rgba(150,210,255,.55)');
+    grad.addColorStop(1,'rgba(220,240,255,.95)');
+    ctx.fillStyle=grad;
+    ctx.beginPath();ctx.ellipse(W2*.45,H2*.4,W2*.35,12,-.2,0,Math.PI*2);ctx.fill();
+    ctx.globalAlpha=.95;
+    ctx.fillStyle='rgba(230,245,255,.98)';
+    ctx.beginPath();ctx.arc(W2*.78,H2*.38,14,0,Math.PI*2);ctx.fill();
+    ctx.globalAlpha=1;
   }
-  if(periodo === "semana"){
-    inicio.setDate(inicio.getDate() - 7);
-  }
-  if(periodo === "mes"){
-    inicio.setMonth(inicio.getMonth() - 1);
-  }
-
-  const where = `data >= '${inicio.toISOString().split("T")[0]}'`;
-
-
-  Backendless.Data.of("HistoricoPausas")
-    .find({ whereClause: where })
-    .then(res=>{
-      const resumo = {};
-
-      res.forEach(r=>{
-        const chave = r.analista + "|" + r.tipoPausa;
-
-        if(!resumo[chave]){
-          resumo[chave] = {
-            analista: r.analista,
-            canal: r.canal,
-            tipo: r.tipoPausa,
-            qtd: 0,
-            tempo: 0
-          };
-        }
-
-        resumo[chave].qtd++;
-        resumo[chave].tempo += r.duracao;
+  // Planet
+  if(pg.planet){
+    const {cx,cy,r,color,ring,stripes,spots}=pg.planet;
+    const px=cx*W2,py=cy*H2,pr=r*Math.min(W2,H2);
+    // glow
+    const gg=ctx.createRadialGradient(px,py,pr*.5,px,py,pr*2.2);
+    gg.addColorStop(0,color+'55'); gg.addColorStop(1,color+'00');
+    ctx.globalAlpha=.7; ctx.fillStyle=gg; ctx.beginPath();ctx.arc(px,py,pr*2.2,0,Math.PI*2);ctx.fill();
+    // body
+    const gp=ctx.createRadialGradient(px-pr*.3,py+pr*.3,pr*.1,px,py,pr);
+    gp.addColorStop(0,color+'ff'); gp.addColorStop(.6,color+'cc'); gp.addColorStop(1,color+'44');
+    ctx.globalAlpha=1; ctx.fillStyle=gp;
+    ctx.beginPath();ctx.arc(px,py,pr,0,Math.PI*2);ctx.fill();
+    if(stripes){
+      ctx.globalAlpha=.18;
+      for(let s=-2;s<=2;s++){
+        ctx.fillStyle='rgba(255,255,255,.8)';
+        ctx.beginPath();ctx.ellipse(px,py+s*pr*.28,pr*.95,pr*.08,0,0,Math.PI*2);ctx.fill();
+      }
+    }
+    if(spots){
+      ctx.globalAlpha=.22;
+      [[-.3,.1,.18],[.25,-.2,.1],[-.1,.3,.08]].forEach(([dx,dy,sr])=>{
+        ctx.fillStyle='rgba(0,0,0,.6)';
+        ctx.beginPath();ctx.arc(px+dx*pr,py+dy*pr,sr*pr,0,Math.PI*2);ctx.fill();
       });
-
-      tabelaHistorico.innerHTML = "";
-      Object.values(resumo).forEach(r=>{
-        tabelaHistorico.innerHTML += `
-          <tr>
-            <td>${r.analista}</td>
-            <td>${r.canal}</td>
-            <td>${r.tipo}</td>
-            <td>${r.qtd}</td>
-            <td>${formatarHora(r.tempo)}</td>
-          </tr>`;
-      });
-    });
+    }
+    // highlight
+    ctx.globalAlpha=.55; ctx.fillStyle='rgba(255,255,255,.7)';
+    ctx.beginPath();ctx.ellipse(px-pr*.25,py+pr*.25,pr*.22,pr*.1,-.4,0,Math.PI*2);ctx.fill();
+    ctx.globalAlpha=1;
+    if(ring){
+      ctx.globalAlpha=.5;
+      ctx.strokeStyle='rgba(255,220,120,.75)'; ctx.lineWidth=pr*.12;
+      ctx.beginPath();ctx.ellipse(px,py,pr*1.55,pr*.38,0,0,Math.PI*2);ctx.stroke();
+      ctx.globalAlpha=1;
+    }
+  }
+  // Nebula blob
+  if(pg.nebula){
+    const gn=ctx.createRadialGradient(W2*.5,H2*.7,0,W2*.5,H2*.7,W2*.5);
+    gn.addColorStop(0,pg.nebula.color); gn.addColorStop(1,'transparent');
+    ctx.globalAlpha=.6; ctx.fillStyle=gn; ctx.fillRect(0,0,W2,H2); ctx.globalAlpha=1;
+  }
+  // Noah emoji
+  ctx.font=`${pg.emojiSize||72}px serif`;
+  ctx.globalAlpha=.92;
+  ctx.fillText(pg.emoji||'👨‍🚀',(pg.emojiX||.5)*W2-pg.emojiSize*.5,(pg.emojiY||.55)*H2+pg.emojiSize*.35);
+  ctx.globalAlpha=1;
+  // Animated glow on Noah
+  animateIllustrationGlow(cv, pg);
 }
-function exportarHistorico(){
-  Backendless.Data.of("HistoricoPausas").find().then(res=>{
-    let csv = "Analista,Canal,Tipo Pausa,Inicio,Fim,Duração(segundos)\n";
-    res.forEach(r=>{
-      csv += `${r.analista},${r.canal},${r.tipoPausa},${new Date(r.inicio).toLocaleString()},${new Date(r.fim).toLocaleString()},${r.duracao}\n`;
-    });
 
-    const blob = new Blob([csv], {type:"text/csv"});
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "historico_pausas.csv";
-    link.click();
+function animateIllustrationGlow(cv, pg){
+  // Add subtle star twinkle animation
+  let frame=0;
+  const ctx=cv.getContext('2d');
+  function tick(){
+    if(!document.getElementById('reading-overlay').classList.contains('open')) return;
+    frame++;
+    // Twinkle a few random stars
+    if(frame%8===0){
+      const x=Math.random()*cv.width, y=Math.random()*cv.height*.65;
+      ctx.globalAlpha=Math.random()*.8;
+      ctx.fillStyle='rgba(255,255,220,.9)';
+      ctx.beginPath();ctx.arc(x,y,Math.random()*2+.5,0,Math.PI*2);ctx.fill();
+      ctx.globalAlpha=1;
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+}
+
+/* Reader open/close */
+function openReader(){
+  const overlay = document.getElementById('reading-overlay');
+  overlay.classList.add('open');
+  document.body.style.overflow='hidden';
+  if(!overlay.querySelector('.reader-page')){
+    buildReaderPages();
+    setupReaderScroll();
+  }
+}
+function closeReader(){
+  document.getElementById('reading-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+let currentReaderPage = 0;
+function setupReaderScroll(){
+  const pages2 = document.getElementById('readerPages');
+  pages2.addEventListener('scroll',()=>{
+    const H2 = window.innerHeight;
+    const scrollTop = pages2.scrollTop;
+    const total = pages2.scrollHeight - H2;
+    const prog = (total > 0 ? scrollTop/total : 0)*100;
+    document.getElementById('readerProgress').style.width = prog+'%';
+
+    // Which page
+    const pageEls = pages2.querySelectorAll('.reader-page');
+    pageEls.forEach((el,i)=>{
+      const rect = el.getBoundingClientRect();
+      if(rect.top <= window.innerHeight*.4 && rect.bottom >= window.innerHeight*.4){
+        currentReaderPage = i;
+        document.getElementById('reader-page-indicator').textContent = `Pág ${i+1} / ${READER_PAGES.length}`;
+      }
+      // Text block animation on scroll into view
+      const tb = el.querySelector('.page-text-block');
+      if(tb && rect.top < window.innerHeight*.75 && rect.top > -window.innerHeight){
+        setTimeout(()=>tb.classList.add('animate-in'),100);
+      }
+    });
   });
-}
-function toggleHistorico(){
-  const painel = document.getElementById("painelHistorico");
-  painel.classList.toggle("aberto");
+  // Trigger first page
+  setTimeout(()=>{
+    const first = document.querySelector('#rpage-0 .page-text-block');
+    if(first) first.classList.add('animate-in');
+  }, 400);
 }
 
+function scrollReaderTo(dir){
+  const pages2 = document.getElementById('readerPages');
+  const target = dir==='next' ? Math.min(currentReaderPage+1,READER_PAGES.length-1) : Math.max(currentReaderPage-1,0);
+  scrollReaderToPage(target);
+}
+function scrollReaderToPage(idx){
+  const el = document.getElementById('rpage-'+idx);
+  if(el){
+    el.scrollIntoView({behavior:'smooth'});
+    currentReaderPage = idx;
+  }
+}
+
+/* Keyboard nav */
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('reading-overlay').classList.contains('open')){
+    if(e.key==='ArrowDown'||e.key==='ArrowRight') scrollReaderTo('next');
+    if(e.key==='ArrowUp'||e.key==='ArrowLeft') scrollReaderTo('prev');
+    if(e.key==='Escape') closeReader();
+  }
+});
+
+/* Touch swipe on reader */
+let touchStartY=0;
+document.getElementById('reading-overlay').addEventListener('touchstart',e=>touchStartY=e.touches[0].clientY,{passive:true});
+document.getElementById('reading-overlay').addEventListener('touchend',e=>{
+  const diff=touchStartY-e.changedTouches[0].clientY;
+  if(Math.abs(diff)>60){
+    if(diff>0) scrollReaderTo('next'); else scrollReaderTo('prev');
+  }
+},{passive:true});
 </script>
-
 </body>
 </html>
