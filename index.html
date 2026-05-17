@@ -4,1186 +4,866 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Noah e o Planeta dos Sonhos ✨</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+<title>Mundos Magicos — eBooks Infantis Premium</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Cinzel:wght@400;500;600;700&family=Lato:wght@200;300;400&display=swap" rel="stylesheet">
 <style>
-/* ─── RESET & BASE ─────────────────────────────────────────── */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --sky1:#04061a;--sky2:#0d1245;--sky3:#1a0835;
-  --star:#fff9e0;--gold:#ffd060;--gold2:#ffaa20;
-  --blue:#4488ff;--teal:#22ccaa;--pink:#ff66bb;
-  --purple:#a855f7;--orange:#ff8844;--green:#44cc66;
-  --suit:#c8ddf5;--suit2:#5a7fb0;
-  --text:#f0eeff;--textd:#1a0a3a;
-  --panel:rgba(10,8,40,0.82);
-  --r:1.5rem;
-  font-size:16px;
-}
 html{scroll-behavior:smooth}
-body{
-  background:var(--sky1);
-  color:var(--text);
-  font-family:'Nunito',sans-serif;
-  overflow-x:hidden;
-  cursor:none;
+body{background:#020510;color:#dde4f5;font-family:'Lato',sans-serif;overflow-x:hidden;cursor:none}
+
+:root{
+  --ink:#020510;
+  --gold:#c8a84b;
+  --gold-bright:#f0d070;
+  --cream:#e8eeff;
+  --glass:rgba(255,255,255,0.04);
+  --glass-b:rgba(255,255,255,0.08);
+  --text-dim:rgba(180,195,240,0.6);
+  --text-mid:rgba(200,215,255,0.82);
 }
 
-/* ─── CUSTOM CURSOR ────────────────────────────────────────── */
-#cursor{
-  position:fixed;width:28px;height:28px;pointer-events:none;z-index:9999;
-  transform:translate(-50%,-50%);transition:transform .12s ease;
-}
-#cursor svg{width:100%;height:100%;filter:drop-shadow(0 0 6px #ffd06088)}
-body:hover #cursor{transform:translate(-50%,-50%) scale(1)}
+/* GLOBAL CANVAS BG */
+#bgCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
 
-/* ─── STARS CANVAS ─────────────────────────────────────────── */
-#starfield{position:fixed;inset:0;z-index:0;pointer-events:none}
+/* CURSOR */
+.cur,.cur-r{position:fixed;pointer-events:none;z-index:9999;border-radius:50%;transform:translate(-50%,-50%)}
+.cur{width:10px;height:10px;background:var(--gold);box-shadow:0 0 14px var(--gold);transition:width .2s,height .2s}
+.cur-r{width:36px;height:36px;border:1px solid rgba(200,168,75,.4)}
+.cur.big{width:18px;height:18px}
 
-/* ─── FLOATING PARTICLES ───────────────────────────────────── */
-.particle{
-  position:fixed;pointer-events:none;z-index:1;
-  border-radius:50%;animation:floatUp linear infinite;
-  opacity:0;
-}
-@keyframes floatUp{
-  0%{transform:translateY(0) rotate(0deg);opacity:0}
-  10%{opacity:.7}
-  90%{opacity:.4}
-  100%{transform:translateY(-100vh) rotate(720deg);opacity:0}
-}
+/* PROGRESS */
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(to right,#4020c0,var(--gold));z-index:500;width:0}
 
-/* ─── SECTIONS SHARED ──────────────────────────────────────── */
-section{position:relative;z-index:2}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:1.4rem 5vw;backdrop-filter:blur(20px);background:rgba(2,5,16,.5);border-bottom:1px solid rgba(255,255,255,.04);transition:background .4s}
+.nav-brand{font-family:'Cinzel',serif;font-size:.85rem;letter-spacing:.4em;color:var(--gold);text-transform:uppercase}
+.nav-cta{font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-bright));padding:.6rem 1.6rem;border:none;border-radius:2px;cursor:pointer;box-shadow:0 0 24px rgba(200,168,75,.35);transition:all .3s}
+.nav-cta:hover{box-shadow:0 0 50px rgba(200,168,75,.65);transform:translateY(-1px)}
 
-/* ─── NAV ──────────────────────────────────────────────────── */
-nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:.9rem 2.5rem;
-  background:rgba(4,6,26,.75);
-  backdrop-filter:blur(18px);
-  border-bottom:1px solid rgba(100,120,255,.15);
-}
-.nav-logo{
-  font-family:'Fredoka One',cursive;font-size:1.5rem;
-  background:linear-gradient(135deg,var(--gold),var(--pink));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  letter-spacing:.03em;
-}
-.nav-links{display:flex;gap:1.4rem;list-style:none}
-.nav-links a{
-  color:rgba(255,255,255,.75);text-decoration:none;font-weight:700;
-  font-size:.9rem;letter-spacing:.04em;
-  transition:color .2s;
-}
-.nav-links a:hover{color:var(--gold)}
-.btn-nav{
-  background:linear-gradient(135deg,var(--gold),var(--orange));
-  color:var(--textd)!important;
-  padding:.45rem 1.2rem;border-radius:50px;
-  font-weight:900!important;font-size:.85rem!important;
-  transition:transform .2s,box-shadow .2s!important;
-  box-shadow:0 4px 18px rgba(255,180,30,.35);
-}
-.btn-nav:hover{transform:translateY(-2px) scale(1.05)!important;box-shadow:0 8px 28px rgba(255,180,30,.5)!important}
+/* SECTIONS */
+section{position:relative;z-index:1}
 
-/* ─── HERO ─────────────────────────────────────────────────── */
-#hero{
-  min-height:100vh;display:flex;align-items:center;justify-content:center;
-  padding:6rem 2rem 3rem;
-  background:radial-gradient(ellipse 80% 60% at 50% 60%, rgba(68,136,255,.12) 0%, transparent 70%),
-             radial-gradient(ellipse 50% 40% at 70% 40%, rgba(168,85,247,.1) 0%, transparent 60%);
-}
-.hero-inner{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:3rem;align-items:center;max-width:1100px;width:100%;
-}
-.hero-text{animation:fadeSlideLeft .9s cubic-bezier(.22,1,.36,1) both}
-.hero-badge{
-  display:inline-flex;align-items:center;gap:.5rem;
-  background:rgba(255,208,96,.12);border:1px solid rgba(255,208,96,.3);
-  border-radius:50px;padding:.3rem .9rem;
-  font-size:.78rem;font-weight:800;color:var(--gold);
-  letter-spacing:.08em;text-transform:uppercase;margin-bottom:1.2rem;
-}
-.hero-badge span{font-size:1rem}
-h1{
-  font-family:'Fredoka One',cursive;
-  font-size:clamp(2.4rem,5vw,4.2rem);
-  line-height:1.1;
-  background:linear-gradient(160deg,#fff 0%,var(--gold) 40%,var(--pink) 80%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  margin-bottom:1rem;
-}
-.hero-sub{
-  font-size:1.15rem;line-height:1.7;
-  color:rgba(240,238,255,.75);margin-bottom:2rem;
-  max-width:480px;
-}
-.hero-btns{display:flex;gap:1rem;flex-wrap:wrap}
-.btn-primary{
-  display:inline-flex;align-items:center;gap:.6rem;
-  background:linear-gradient(135deg,var(--gold),var(--orange));
-  color:var(--textd);font-weight:900;font-size:1rem;
-  padding:.85rem 2rem;border-radius:50px;text-decoration:none;
-  border:none;cursor:none;
-  box-shadow:0 6px 28px rgba(255,170,30,.45);
-  transition:transform .25s,box-shadow .25s;
-  animation:pulse 2.5s ease-in-out infinite;
-}
-.btn-primary:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 12px 40px rgba(255,170,30,.6)}
-@keyframes pulse{0%,100%{box-shadow:0 6px 28px rgba(255,170,30,.45)}50%{box-shadow:0 6px 40px rgba(255,170,30,.75)}}
-.btn-secondary{
-  display:inline-flex;align-items:center;gap:.6rem;
-  background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.2);
-  color:var(--text);font-weight:800;font-size:1rem;
-  padding:.85rem 2rem;border-radius:50px;text-decoration:none;cursor:none;
-  transition:background .25s,border-color .25s,transform .25s;
-}
-.btn-secondary:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.4);transform:translateY(-3px)}
-.hero-stats{display:flex;gap:2rem;margin-top:2.2rem;flex-wrap:wrap}
-.stat{text-align:center}
-.stat-num{font-family:'Fredoka One',cursive;font-size:2rem;color:var(--gold);line-height:1}
-.stat-label{font-size:.75rem;color:rgba(255,255,255,.5);font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+/* ===== HERO ===== */
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:9rem 5vw 5rem;overflow:hidden}
+.hero-tag{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.6em;color:var(--gold);text-transform:uppercase;margin-bottom:2rem;opacity:0}
+.hero-h{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,8vw,7rem);font-weight:300;line-height:1.05;color:var(--cream);margin-bottom:.7rem;opacity:0}
+.hero-h em{display:block;font-style:italic;color:var(--gold)}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-size:clamp(1.05rem,2.2vw,1.5rem);font-weight:300;font-style:italic;color:var(--text-mid);line-height:1.7;max-width:580px;margin:0 auto 3.5rem;opacity:0}
 
 /* BOOK 3D */
-.hero-book{
-  display:flex;justify-content:center;align-items:center;
-  animation:fadeSlideRight .9s cubic-bezier(.22,1,.36,1) .2s both;
+.book-stage{width:300px;height:400px;margin:0 auto 3.5rem;perspective:1400px;opacity:0;position:relative}
+.book-wrap{width:100%;height:100%;transform-style:preserve-3d;transform:rotateY(-22deg) rotateX(10deg);transition:transform .7s cubic-bezier(.23,1,.32,1);position:relative}
+.b-front,.b-back,.b-spine,.b-pages{position:absolute;backface-visibility:hidden}
+.b-front{
+  width:260px;height:360px;top:20px;left:30px;
+  border-radius:3px 14px 14px 3px;overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,.9),0 0 60px rgba(80,40,180,.3),inset 0 0 80px rgba(60,30,140,.12);
 }
-.book-scene{
-  perspective:900px;
-  width:280px;height:360px;
-  animation:bookFloat 4s ease-in-out infinite;
-}
-@keyframes bookFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}
-.book-3d{
-  width:100%;height:100%;position:relative;
-  transform-style:preserve-3d;
-  transform:rotateY(-22deg) rotateX(6deg);
-  transition:transform .5s ease;
-}
-.book-scene:hover .book-3d{transform:rotateY(-8deg) rotateX(3deg)}
-.book-face,.book-back,.book-spine{
-  position:absolute;border-radius:4px 12px 12px 4px;
-  backface-visibility:hidden;
-}
-.book-face{
-  inset:0;
-  background:linear-gradient(160deg,#0a1245 0%,#08072a 100%);
-  border:2px solid rgba(100,140,255,.3);
-  overflow:hidden;display:flex;flex-direction:column;align-items:center;
-  justify-content:flex-end;padding:1.2rem;
-  box-shadow:8px 8px 40px rgba(0,0,0,.8),inset 0 0 60px rgba(68,136,255,.08);
-}
-.book-face::before{
-  content:'';position:absolute;inset:0;
-  background:
-    radial-gradient(ellipse 60% 50% at 50% 55%,rgba(68,136,255,.25) 0%,transparent 70%),
-    radial-gradient(ellipse 40% 35% at 70% 35%,rgba(168,85,247,.18) 0%,transparent 55%);
-}
-.book-planet{
-  position:absolute;top:15%;left:50%;transform:translateX(-50%);
-  width:110px;height:110px;border-radius:50%;
-  background:radial-gradient(circle at 35% 65%,#4488ff,#1a2a80);
-  box-shadow:0 0 40px rgba(68,136,255,.6),inset -20px -10px 30px rgba(0,0,20,.5);
-}
-.book-planet::after{
-  content:'';position:absolute;
-  width:160%;height:30%;top:35%;left:-30%;
-  border:6px solid rgba(255,208,96,.5);
-  border-radius:50%;transform:rotateX(70deg);
-}
-.book-noah{
-  position:absolute;top:30%;left:50%;transform:translateX(-40%);
-  font-size:4rem;filter:drop-shadow(0 0 12px rgba(255,208,96,.6));
-  animation:noahWave 2s ease-in-out infinite;
-}
-@keyframes noahWave{0%,100%{transform:translateX(-40%) rotate(-3deg)}50%{transform:translateX(-40%) rotate(3deg)}}
-.book-title{
-  font-family:'Fredoka One',cursive;font-size:.9rem;
-  text-align:center;color:var(--gold);position:relative;z-index:1;
-  text-shadow:0 0 20px rgba(255,208,96,.6);
-}
-.book-stars-deco{position:absolute;inset:0;pointer-events:none;overflow:hidden}
-.book-star{position:absolute;width:3px;height:3px;background:white;border-radius:50%;animation:twinkle 2s infinite}
-@keyframes twinkle{0%,100%{opacity:.3}50%{opacity:1}}
-.book-spine{
-  width:28px;top:4px;bottom:4px;left:-28px;border-radius:8px 4px 4px 8px;
-  background:linear-gradient(180deg,#1a2870,#0a0d30);
-  border:2px solid rgba(100,140,255,.2);
-  box-shadow:-4px 0 20px rgba(0,0,0,.5);
-}
-.book-glow{
-  position:absolute;inset:-20px;border-radius:50%;
-  background:radial-gradient(ellipse,rgba(68,136,255,.2) 0%,transparent 70%);
-  pointer-events:none;
-  animation:glowPulse 3s ease-in-out infinite;
-}
-@keyframes glowPulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:.9;transform:scale(1.08)}}
+.b-spine{width:30px;height:360px;top:20px;left:0;background:linear-gradient(180deg,#0e0438,#1c0860,#0e0438);border-radius:3px 0 0 3px;box-shadow:inset -5px 0 10px rgba(0,0,0,.5)}
+.b-back{width:260px;height:360px;top:20px;left:30px;background:#060218;border-radius:3px 14px 14px 3px;transform:translateZ(-30px);box-shadow:-8px 20px 50px rgba(0,0,0,.8)}
+.b-pages{width:22px;height:350px;top:25px;right:-8px;background:linear-gradient(to right,#ccc6b8,#e8e4d8);border-radius:0 2px 2px 0}
 
-/* ─── REVEAL ANIMATIONS ────────────────────────────────────── */
-@keyframes fadeSlideLeft{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}
-@keyframes fadeSlideRight{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
-@keyframes fadeSlideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
-@keyframes scaleIn{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+/* book cover has a canvas inside */
+#coverCv{position:absolute;inset:0;width:100%;height:100%;display:block}
+.b-text{position:absolute;bottom:2rem;left:0;right:0;text-align:center;z-index:3;padding:0 1.2rem;pointer-events:none}
+.b-text h3{font-family:'Cinzel',serif;font-size:.95rem;letter-spacing:.12em;color:var(--gold-bright);line-height:1.4;text-shadow:0 0 20px rgba(240,208,112,.9),0 0 50px rgba(200,168,75,.5)}
+.b-text p{font-family:'Cormorant Garamond',serif;font-size:.68rem;letter-spacing:.3em;color:rgba(200,215,255,.45);margin-top:.45rem;text-transform:uppercase}
+.book-floor{position:absolute;bottom:-15px;left:50%;transform:translateX(-40%);width:200px;height:40px;background:radial-gradient(ellipse,rgba(80,40,200,.4) 0%,transparent 70%);filter:blur(12px);pointer-events:none}
 
-.reveal{opacity:0;transform:translateY(36px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
-.reveal.visible{opacity:1;transform:none}
-.reveal-left{opacity:0;transform:translateX(-36px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
-.reveal-left.visible{opacity:1;transform:none}
-.reveal-right{opacity:0;transform:translateX(36px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
-.reveal-right.visible{opacity:1;transform:none}
-.reveal-scale{opacity:0;transform:scale(.85);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1)}
-.reveal-scale.visible{opacity:1;transform:scale(1)}
+/* hero buttons */
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;opacity:0}
+.btn-p{font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink);font-weight:700;background:linear-gradient(135deg,var(--gold) 0%,var(--gold-bright) 50%,var(--gold) 100%);background-size:200%;padding:.95rem 2.8rem;border:none;border-radius:2px;cursor:pointer;position:relative;overflow:hidden;box-shadow:0 0 40px rgba(200,168,75,.4),0 6px 24px rgba(0,0,0,.5);transition:all .4s}
+.btn-p::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transform:translateX(-100%);transition:.5s}
+.btn-p:hover::before{transform:translateX(100%)}
+.btn-p:hover{background-position:100%;box-shadow:0 0 70px rgba(200,168,75,.7);transform:translateY(-3px)}
+.btn-s{font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);background:transparent;padding:.95rem 2.2rem;border:1px solid rgba(200,168,75,.3);border-radius:2px;cursor:pointer;transition:all .4s}
+.btn-s:hover{border-color:rgba(200,168,75,.7);background:rgba(200,168,75,.07)}
 
-/* ─── FEATURES ─────────────────────────────────────────────── */
-#features{
-  padding:7rem 2rem;
-  background:linear-gradient(180deg,transparent,rgba(10,8,40,.6),transparent);
-}
-.section-title{
-  font-family:'Fredoka One',cursive;
-  font-size:clamp(1.9rem,4vw,3rem);
-  text-align:center;margin-bottom:.6rem;
-  background:linear-gradient(135deg,#fff,var(--gold));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-}
-.section-sub{text-align:center;color:rgba(255,255,255,.55);margin-bottom:3.5rem;font-size:1rem}
-.features-grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:1.5rem;max-width:1100px;margin:0 auto;
-}
-.feature-card{
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:20px;padding:2rem 1.6rem;
-  transition:transform .3s,background .3s,box-shadow .3s;
-  position:relative;overflow:hidden;
-}
-.feature-card::before{
-  content:'';position:absolute;inset:0;border-radius:20px;
-  background:linear-gradient(135deg,rgba(255,255,255,.04),transparent);
-  opacity:0;transition:opacity .3s;
-}
-.feature-card:hover{transform:translateY(-8px);background:rgba(255,255,255,.07);box-shadow:0 20px 50px rgba(0,0,0,.4)}
-.feature-card:hover::before{opacity:1}
-.feature-icon{font-size:2.8rem;margin-bottom:1rem;display:block;animation:iconBounce 3s ease-in-out infinite}
-@keyframes iconBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
-.feature-card:nth-child(2) .feature-icon{animation-delay:.4s}
-.feature-card:nth-child(3) .feature-icon{animation-delay:.8s}
-.feature-card:nth-child(4) .feature-icon{animation-delay:1.2s}
-.feature-card h3{font-family:'Baloo 2',cursive;font-size:1.15rem;font-weight:700;margin-bottom:.5rem;color:var(--gold)}
-.feature-card p{font-size:.9rem;color:rgba(255,255,255,.6);line-height:1.65}
+.scroll-ind{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;opacity:.4}
+.sc-line{width:1px;height:55px;background:linear-gradient(to bottom,var(--gold),transparent);animation:sca 2.2s ease-in-out infinite}
+@keyframes sca{0%,100%{opacity:.3;transform:scaleY(1)}50%{opacity:1;transform:scaleY(1.1)}}
+.sc-lbl{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.4em;color:var(--gold);text-transform:uppercase}
 
-/* ─── PREVIEW / PAGES ──────────────────────────────────────── */
-#preview{
-  padding:7rem 2rem;
-  background:radial-gradient(ellipse 80% 50% at 50% 50%, rgba(168,85,247,.07) 0%, transparent 70%);
-}
-.pages-showcase{
-  display:flex;gap:1.5rem;overflow-x:auto;padding:1rem .5rem 2rem;
-  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.15) transparent;
-  max-width:1200px;margin:0 auto;
-  scroll-snap-type:x mandatory;
-}
-.page-thumb{
-  flex:0 0 200px;height:270px;border-radius:14px;
-  background:var(--sky1);border:2px solid rgba(255,255,255,.08);
-  overflow:hidden;cursor:none;position:relative;
-  transition:transform .3s,box-shadow .3s;
-  scroll-snap-align:start;
-}
-.page-thumb:hover{transform:scale(1.08) translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,.5)}
-.page-thumb-inner{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;position:relative;overflow:hidden}
-.page-thumb canvas{position:absolute;inset:0;width:100%;height:100%}
-.page-thumb-label{position:absolute;bottom:8px;font-size:.7rem;font-weight:800;color:rgba(255,255,255,.5);letter-spacing:.06em}
-.page-num-badge{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.5);border-radius:50px;padding:.15rem .5rem;font-size:.65rem;color:rgba(255,255,255,.6);font-weight:700}
+/* ===== SHARED SECTION HEADER ===== */
+.sec-eye{display:block;font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.55em;color:var(--gold);text-transform:uppercase;text-align:center;margin-bottom:1rem}
+.sec-h{font-family:'Cormorant Garamond',serif;font-size:clamp(1.9rem,4.5vw,3.4rem);font-weight:300;line-height:1.15;text-align:center;color:var(--cream);margin-bottom:1rem}
+.sec-h em{font-style:italic;color:var(--gold)}
+.sec-p{font-size:.93rem;line-height:2;color:var(--text-dim);text-align:center;max-width:560px;margin:0 auto 4rem;font-weight:300}
+.sec-div{width:60px;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent);margin:0 auto 3.5rem}
 
-/* ─── PRICING ──────────────────────────────────────────────── */
-#pricing{padding:7rem 2rem}
-.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.8rem;max-width:900px;margin:0 auto}
-.price-card{
-  border-radius:24px;padding:2.4rem 2rem;position:relative;overflow:hidden;
-  border:1.5px solid rgba(255,255,255,.1);
-  background:rgba(255,255,255,.04);
-  transition:transform .3s,box-shadow .3s;
-}
-.price-card:hover{transform:translateY(-8px)}
-.price-card.featured{
-  background:linear-gradient(160deg,rgba(68,136,255,.12),rgba(168,85,247,.1));
-  border-color:rgba(100,160,255,.35);
-  box-shadow:0 0 60px rgba(68,136,255,.2);
-}
-.price-card.featured::before{
-  content:'⭐ MAIS POPULAR';
-  position:absolute;top:1rem;right:1rem;
-  background:linear-gradient(135deg,var(--gold),var(--orange));
-  color:var(--textd);font-size:.65rem;font-weight:900;
-  padding:.25rem .7rem;border-radius:50px;letter-spacing:.06em;
-}
-.price-name{font-family:'Fredoka One',cursive;font-size:1.2rem;color:rgba(255,255,255,.7);margin-bottom:.5rem}
-.price-amount{font-family:'Fredoka One',cursive;font-size:3rem;color:var(--gold);line-height:1}
-.price-period{font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:1.5rem}
-.price-features{list-style:none;margin-bottom:2rem}
-.price-features li{padding:.4rem 0;font-size:.9rem;color:rgba(255,255,255,.65);display:flex;align-items:center;gap:.5rem}
-.price-features li::before{content:'✦';color:var(--gold);font-size:.7rem}
-.btn-price{
-  display:block;text-align:center;text-decoration:none;
-  padding:.85rem;border-radius:50px;font-weight:900;font-size:.95rem;
-  transition:transform .2s,box-shadow .2s;cursor:none;
-}
-.btn-price.main{background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--textd);box-shadow:0 6px 24px rgba(255,170,30,.35)}
-.btn-price.main:hover{transform:translateY(-2px);box-shadow:0 10px 34px rgba(255,170,30,.55)}
-.btn-price.outline{border:1.5px solid rgba(255,255,255,.2);color:var(--text)}
-.btn-price.outline:hover{background:rgba(255,255,255,.08);transform:translateY(-2px)}
+/* ===== BENEFITS ===== */
+#benefits{padding:10rem 5vw}
+.bene-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:1100px;margin:0 auto}
+.bene-card{padding:2.4rem 2rem;background:var(--glass);border:1px solid var(--glass-b);backdrop-filter:blur(20px);border-radius:12px;position:relative;overflow:hidden;transition:transform .4s,box-shadow .4s,border-color .4s}
+.bene-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(100,50,220,.14),transparent 68%);opacity:0;transition:opacity .4s}
+.bene-card:hover::before{opacity:1}
+.bene-card:hover{transform:translateY(-8px);border-color:rgba(200,168,75,.2);box-shadow:0 24px 60px rgba(0,0,0,.5),0 0 40px rgba(80,40,180,.12)}
+.bene-icon{width:50px;height:50px;border-radius:10px;background:linear-gradient(135deg,rgba(100,50,220,.22),rgba(200,168,75,.1));border:1px solid rgba(200,168,75,.15);display:flex;align-items:center;justify-content:center;margin-bottom:1.4rem}
+.bene-icon svg{width:22px;height:22px}
+.bene-card h4{font-family:'Cinzel',serif;font-size:.83rem;letter-spacing:.08em;color:var(--gold);margin-bottom:.55rem}
+.bene-card p{font-size:.87rem;line-height:1.85;color:var(--text-dim);font-weight:300}
 
-/* ─── TESTIMONIALS ─────────────────────────────────────────── */
-#reviews{
-  padding:7rem 2rem;
-  background:linear-gradient(180deg,transparent,rgba(20,10,50,.5),transparent);
-}
-.reviews-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;max-width:1000px;margin:0 auto}
-.review-card{
-  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
-  border-radius:18px;padding:1.8rem;
-  transition:transform .3s;
-}
-.review-card:hover{transform:translateY(-5px)}
-.review-stars{color:var(--gold);font-size:1rem;margin-bottom:.8rem;letter-spacing:.1em}
-.review-text{font-size:.92rem;color:rgba(255,255,255,.7);line-height:1.7;margin-bottom:1rem;font-style:italic}
-.review-author{display:flex;align-items:center;gap:.8rem}
-.review-avatar{width:38px;height:38px;border-radius:50%;font-size:1.4rem;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.08)}
-.review-name{font-weight:800;font-size:.85rem}
-.review-role{font-size:.75rem;color:rgba(255,255,255,.4)}
+/* ===== FEATURE ROWS ===== */
+#features{padding:10rem 5vw;background:linear-gradient(to bottom,transparent,rgba(14,20,50,.3),transparent)}
+.feat-wrap{max-width:1000px;margin:0 auto}
+.feat-row{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;margin-bottom:8rem}
+.feat-row:last-child{margin-bottom:0}
+.feat-row.rev .feat-t{order:2}.feat-row.rev .feat-v{order:1}
+.feat-tag{display:inline-block;font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.3em;color:var(--gold);border:1px solid rgba(200,168,75,.25);padding:.32rem .85rem;border-radius:20px;margin-bottom:1.6rem;text-transform:uppercase}
+.feat-t h3{font-family:'Cormorant Garamond',serif;font-size:clamp(1.7rem,2.8vw,2.5rem);font-weight:300;color:var(--cream);margin-bottom:1.1rem;line-height:1.2}
+.feat-t h3 em{font-style:italic;color:var(--gold)}
+.feat-t p{font-size:.93rem;line-height:2;color:var(--text-dim);font-weight:300;margin-bottom:1.2rem}
 
-/* ─── CTA FINAL ────────────────────────────────────────────── */
-#cta{
-  padding:8rem 2rem;text-align:center;
-  background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(68,136,255,.15) 0%,transparent 70%);
+/* Feature visual boxes — CSS-drawn instead of canvases */
+.feat-v{
+  height:260px;background:var(--glass);border:1px solid var(--glass-b);
+  backdrop-filter:blur(20px);border-radius:14px;
+  overflow:hidden;position:relative;
+  box-shadow:0 20px 60px rgba(0,0,0,.45),0 0 40px rgba(60,30,160,.1);
 }
-#cta h2{font-family:'Fredoka One',cursive;font-size:clamp(2rem,4vw,3.5rem);margin-bottom:1rem}
-#cta p{color:rgba(255,255,255,.6);max-width:500px;margin:0 auto 2.5rem;font-size:1.05rem;line-height:1.7}
+.feat-v canvas{position:absolute;inset:0;width:100%!important;height:100%!important;display:block}
 
-/* ─── FOOTER ───────────────────────────────────────────────── */
-footer{
-  padding:2rem;text-align:center;
-  border-top:1px solid rgba(255,255,255,.06);
-  color:rgba(255,255,255,.3);font-size:.82rem;
-}
+/* ===== WORLDS ===== */
+#worlds{padding:10rem 5vw}
+.worlds-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:1100px;margin:0 auto}
+.world-card{aspect-ratio:3/4;border-radius:14px;overflow:hidden;position:relative;transition:transform .5s cubic-bezier(.23,1,.32,1),box-shadow .5s;cursor:default}
+.world-card:hover{transform:translateY(-10px) scale(1.02);box-shadow:0 40px 80px rgba(0,0,0,.65),0 0 60px rgba(80,40,180,.18)}
+.world-card canvas{position:absolute;inset:0;width:100%!important;height:100%!important;display:block}
+.world-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(2,5,16,.95) 0%,rgba(2,5,16,.2) 55%,transparent 100%);z-index:2}
+.world-ct{position:absolute;bottom:0;left:0;right:0;padding:1.8rem;z-index:3}
+.world-cat{font-family:'Cinzel',serif;font-size:.54rem;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:.45rem}
+.world-name{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:300;color:var(--cream);line-height:1.2;margin-bottom:.35rem}
+.world-desc{font-size:.78rem;color:var(--text-dim);line-height:1.6;font-weight:300}
 
-/* ─── READING MODE ─────────────────────────────────────────── */
-#reading-overlay{
-  position:fixed;inset:0;z-index:1000;
-  background:#02030e;
-  display:none;flex-direction:column;
-}
-#reading-overlay.open{display:flex}
+/* ===== TESTIMONIALS ===== */
+#testimonials{padding:10rem 5vw;background:linear-gradient(to bottom,transparent,rgba(10,14,40,.4),transparent)}
+.test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:1100px;margin:0 auto}
+.test-card{background:var(--glass);border:1px solid var(--glass-b);backdrop-filter:blur(20px);border-radius:12px;padding:2.2rem;position:relative;overflow:hidden;transition:transform .4s,box-shadow .4s}
+.test-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1.5px;background:linear-gradient(to right,transparent,var(--gold),transparent)}
+.test-card:hover{transform:translateY(-5px);box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.test-stars{display:flex;gap:3px;margin-bottom:1.2rem}
+.ts{width:11px;height:11px;background:var(--gold);clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);box-shadow:0 0 6px rgba(200,168,75,.5)}
+.test-q{font-family:'Cormorant Garamond',serif;font-size:1rem;font-style:italic;line-height:1.75;color:rgba(200,215,255,.82);margin-bottom:1.5rem}
+.test-author{display:flex;align-items:center;gap:.9rem}
+.test-av{width:37px;height:37px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,rgba(100,50,220,.5),rgba(200,168,75,.25));border:1px solid rgba(200,168,75,.2);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:.85rem;color:var(--gold)}
+.test-info h5{font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.06em;color:var(--cream)}
+.test-info span{font-size:.72rem;color:var(--text-dim)}
 
-.reader-nav{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:.7rem 1.8rem;
-  background:rgba(4,6,26,.9);backdrop-filter:blur(20px);
-  border-bottom:1px solid rgba(100,120,255,.12);
-  flex-shrink:0;
-}
-.reader-title{font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--gold)}
-.reader-controls{display:flex;align-items:center;gap:1rem}
-.reader-btn{
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
-  color:var(--text);padding:.4rem .9rem;border-radius:50px;
-  font-size:.82rem;font-weight:700;cursor:none;
-  transition:background .2s,transform .2s;font-family:'Nunito',sans-serif;
-}
-.reader-btn:hover{background:rgba(255,255,255,.15);transform:scale(1.05)}
-.reader-btn.close-btn{background:rgba(255,80,80,.15);border-color:rgba(255,80,80,.25);color:#ff8888}
-.reader-btn.close-btn:hover{background:rgba(255,80,80,.28)}
-.reader-progress-bar{
-  height:3px;background:rgba(255,255,255,.06);flex-shrink:0;
-}
-.reader-progress-fill{
-  height:100%;
-  background:linear-gradient(90deg,var(--blue),var(--purple),var(--pink));
-  transition:width .4s ease;width:0%;
-}
+/* ===== CTA ===== */
+#cta{padding:11rem 5vw;position:relative;overflow:hidden}
+#cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 25% 50%,rgba(100,50,220,.1),transparent 55%),radial-gradient(ellipse at 75% 50%,rgba(200,168,75,.06),transparent 55%)}
+.cta-box{max-width:660px;margin:0 auto;text-align:center;position:relative}
+.cta-card{background:var(--glass);border:1px solid var(--glass-b);backdrop-filter:blur(30px);border-radius:18px;padding:3.8rem 2.8rem;margin-top:3.5rem;position:relative;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.45)}
+.cta-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1.5px;background:linear-gradient(to right,transparent,var(--gold),var(--gold-bright),var(--gold),transparent)}
+.badge-urg{display:inline-block;font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.2em;color:#ff8888;border:1px solid rgba(200,60,60,.3);background:rgba(200,60,60,.08);border-radius:20px;padding:.32rem .95rem;margin-bottom:.85rem;animation:urg 2.5s ease-in-out infinite}
+@keyframes urg{0%,100%{box-shadow:0 0 8px rgba(200,60,60,.15)}50%{box-shadow:0 0 22px rgba(200,60,60,.45)}}
+.price-lbl{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.45em;color:var(--text-dim);text-transform:uppercase;margin-bottom:.6rem}
+.price-was{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--text-dim);text-decoration:line-through}
+.price-now{font-family:'Cormorant Garamond',serif;font-size:5.5rem;font-weight:300;line-height:1;color:var(--gold);text-shadow:0 0 40px rgba(200,168,75,.5)}
+.price-now sup{font-size:2rem;vertical-align:top;margin-top:.9rem;display:inline-block}
+.price-now sub{font-size:2.4rem}
+.price-note{font-size:.8rem;color:var(--text-dim);font-style:italic;margin-bottom:2.4rem}
+.incl{display:flex;flex-direction:column;gap:.65rem;margin-bottom:2.6rem;text-align:left}
+.incl-row{display:flex;align-items:center;gap:.85rem;font-size:.87rem;color:var(--text-mid)}
+.incl-dot{width:17px;height:17px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--gold),var(--gold-bright));display:flex;align-items:center;justify-content:center;font-size:.58rem;color:var(--ink);font-weight:900}
+.btn-buy{width:100%;font-family:'Cinzel',serif;font-size:.83rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink);font-weight:700;background:linear-gradient(135deg,var(--gold) 0%,var(--gold-bright) 50%,var(--gold) 100%);background-size:200%;padding:1.2rem 2rem;border:none;border-radius:3px;cursor:pointer;box-shadow:0 0 50px rgba(200,168,75,.45);transition:all .4s}
+.btn-buy:hover{transform:translateY(-3px);box-shadow:0 0 80px rgba(200,168,75,.75);background-position:100%}
+.guar{margin-top:1.2rem;font-size:.77rem;color:var(--text-dim);display:flex;align-items:center;justify-content:center;gap:.5rem}
 
-.reader-pages{
-  flex:1;overflow-y:auto;
-  scroll-snap-type:y mandatory;
-  scroll-behavior:smooth;
-}
-.reader-page{
-  min-height:100vh;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  scroll-snap-align:start;
-  position:relative;overflow:hidden;
-  padding:2rem;
-}
+/* ===== FOOTER ===== */
+footer{padding:3rem 5vw;border-top:1px solid rgba(255,255,255,.04);text-align:center}
+.ft-brand{font-family:'Cinzel',serif;font-size:.88rem;letter-spacing:.4em;color:var(--gold);margin-bottom:1.2rem}
+.ft-links{display:flex;gap:1.8rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.1rem}
+.ft-links a{font-size:.7rem;letter-spacing:.14em;color:var(--text-dim);text-decoration:none;transition:color .3s}
+.ft-links a:hover{color:var(--gold)}
+.ft-copy{font-size:.68rem;color:rgba(100,120,160,.4)}
 
-/* Page backgrounds */
-.reader-page canvas.page-bg{
-  position:absolute;inset:0;width:100%;height:100%;
-}
+/* REVEAL */
+.rv{opacity:0;transform:translateY(50px)}
+.rl{opacity:0;transform:translateX(-50px)}
+.rr{opacity:0;transform:translateX(50px)}
 
-.page-content{
-  position:relative;z-index:2;
-  max-width:700px;width:100%;
-  display:flex;flex-direction:column;align-items:center;
-  gap:2rem;
+/* RESPONSIVE */
+@media(max-width:900px){
+  .bene-grid,.worlds-grid,.test-grid{grid-template-columns:1fr;max-width:420px;margin-left:auto;margin-right:auto}
+  .feat-row,.feat-row.rev{grid-template-columns:1fr}
+  .feat-row.rev .feat-t,.feat-row.rev .feat-v{order:unset}
+  .feat-v{height:200px}
+  body{cursor:auto}.cur,.cur-r{display:none}
 }
-
-.page-illustration{
-  width:100%;max-width:480px;
-  aspect-ratio:4/3;border-radius:20px;overflow:hidden;
-  position:relative;
-  box-shadow:0 20px 60px rgba(0,0,0,.7);
-  border:1.5px solid rgba(255,255,255,.08);
-}
-.page-illustration canvas{width:100%;height:100%;display:block}
-
-.page-text-block{
-  background:rgba(8,6,32,.78);
-  backdrop-filter:blur(20px);
-  border:1px solid rgba(120,130,255,.2);
-  border-radius:18px;padding:1.8rem 2.2rem;
-  max-width:560px;width:100%;
-  transform:translateY(30px);opacity:0;
-  transition:transform .7s cubic-bezier(.22,1,.36,1),opacity .7s;
-}
-.page-text-block.animate-in{transform:translateY(0);opacity:1}
-
-.page-number{
-  font-family:'Fredoka One',cursive;font-size:.85rem;
-  color:rgba(255,208,96,.55);letter-spacing:.1em;
-  text-transform:uppercase;margin-bottom:.5rem;
-}
-.page-story-text{
-  font-family:'Baloo 2',cursive;font-size:1.15rem;
-  line-height:1.85;color:rgba(240,238,255,.9);
-  text-align:center;
-}
-.page-story-text em{
-  color:var(--gold);font-style:normal;font-weight:700;
-}
-
-/* Scroll indicator */
-.scroll-hint{
-  position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);
-  display:flex;flex-direction:column;align-items:center;gap:.3rem;
-  color:rgba(255,255,255,.3);font-size:.7rem;font-weight:700;letter-spacing:.08em;
-  animation:scrollBounce 2s ease-in-out infinite;
-}
-@keyframes scrollBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
-
-/* ─── PLANET BADGE ─────────────────────────────────────────── */
-.planet-deco{
-  position:absolute;pointer-events:none;
-  border-radius:50%;
-  animation:planetOrbit 20s linear infinite;
-}
-@keyframes planetOrbit{from{transform:rotate(0deg) translateX(var(--orbit-r)) rotate(0deg)}to{transform:rotate(360deg) translateX(var(--orbit-r)) rotate(-360deg)}}
-
-/* ─── RESPONSIVE ───────────────────────────────────────────── */
-@media(max-width:768px){
-  .hero-inner{grid-template-columns:1fr;text-align:center}
-  .hero-text{order:2}.hero-book{order:1}
-  .hero-btns{justify-content:center}
-  .hero-stats{justify-content:center}
-  .hero-sub{margin:0 auto 2rem}
-  .nav-links{display:none}
-  .book-scene{width:200px;height:260px}
+@media(max-width:580px){
+  nav{padding:1rem 1.2rem}
+  .nav-brand{font-size:.7rem;letter-spacing:.2em}
+  .hero-btns{flex-direction:column;align-items:center}
+  .btn-p,.btn-s{width:100%;max-width:290px;text-align:center}
+  .cta-card{padding:2.4rem 1.4rem}
+  .book-stage{width:240px;height:340px}
+  .b-front{width:210px;height:310px;top:15px;left:25px}
+  .b-spine{width:25px;height:310px;top:15px}
+  .b-back{width:210px;height:310px;top:15px;left:25px}
+  .b-pages{height:300px;top:20px}
 }
 </style>
 </head>
 <body>
 
-<!-- Custom cursor -->
-<div id="cursor">
-  <svg viewBox="0 0 28 28" fill="none">
-    <circle cx="14" cy="14" r="12" fill="rgba(255,208,96,0.85)" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
-    <text x="14" y="19" text-anchor="middle" font-size="12">🚀</text>
-  </svg>
-</div>
+<div id="prog"></div>
+<div class="cur" id="cur"></div>
+<div class="cur-r" id="cur-r"></div>
+<canvas id="bgCanvas"></canvas>
 
-<!-- Starfield -->
-<canvas id="starfield"></canvas>
-
-<!-- ─── NAV ───────────────────────────────────────────────────────── -->
-<nav>
-  <div class="nav-logo">✦ CosmicKids</div>
-  <ul class="nav-links">
-    <li><a href="#features">Recursos</a></li>
-    <li><a href="#preview">Prévia</a></li>
-    <li><a href="#pricing">Preços</a></li>
-    <li><a href="#reviews">Reviews</a></li>
-    <li><a href="#" class="btn-nav" onclick="openReader()">📖 Ler Agora</a></li>
-  </ul>
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-brand">Mundos Magicos</div>
+  <button class="nav-cta" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Comecar Agora</button>
 </nav>
 
-<!-- ─── HERO ──────────────────────────────────────────────────────── -->
+<!-- HERO -->
 <section id="hero">
-  <div class="hero-inner">
-    <div class="hero-text">
-      <div class="hero-badge"><span>🌟</span> E-book Infantil Premium</div>
-      <h1>Noah e o Planeta dos Sonhos</h1>
-      <p class="hero-sub">Uma aventura mágica pelo universo para crianças de 3 a 8 anos. Planetas fofos, estrelas dançantes e um astronautinha que vai fazer seu filho sorrir antes de dormir.</p>
-      <div class="hero-btns">
-        <a href="#" class="btn-primary" onclick="openReader();return false">
-          📖 Ler Gratuitamente
-        </a>
-        <a href="#pricing" class="btn-secondary">
-          ✦ Ver Planos
-        </a>
-      </div>
-      <div class="hero-stats">
-        <div class="stat"><div class="stat-num">40</div><div class="stat-label">Páginas</div></div>
-        <div class="stat"><div class="stat-num">4.9★</div><div class="stat-label">Avaliação</div></div>
-        <div class="stat"><div class="stat-num">12k+</div><div class="stat-label">Leitores</div></div>
-      </div>
-    </div>
-    <div class="hero-book">
-      <div class="book-scene">
-        <div class="book-glow"></div>
-        <div class="book-3d">
-          <div class="book-face">
-            <div class="book-stars-deco" id="bookStars"></div>
-            <div class="book-planet"></div>
-            <div class="book-noah">👨‍🚀</div>
-            <div class="book-title">Noah e o Planeta dos Sonhos</div>
-          </div>
-          <div class="book-spine"></div>
+  <div class="hero-tag rv">Uma nova dimensao da leitura infantil</div>
+
+  <div class="book-stage rv" id="bookStage">
+    <div class="book-wrap" id="bwrap">
+      <div class="b-back"></div>
+      <div class="b-pages"></div>
+      <div class="b-spine"></div>
+      <div class="b-front">
+        <canvas id="coverCv"></canvas>
+        <div class="b-text">
+          <h3>Mundos<br>Magicos</h3>
+          <p>Colecao de eBooks</p>
         </div>
       </div>
     </div>
+    <div class="book-floor"></div>
+  </div>
+
+  <h1 class="hero-h rv">Historias que<br><em>acendem mundos</em></h1>
+  <p class="hero-sub rv">eBooks infantis com narrativas cinematograficas e ilustracoes que transportam sua crianca para universos de pura imaginacao.</p>
+  <div class="hero-btns">
+    <button class="btn-p" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Explorar Colecao</button>
+    <button class="btn-s" onclick="document.getElementById('worlds').scrollIntoView({behavior:'smooth'})">Ver os Mundos</button>
+  </div>
+  <div class="scroll-ind">
+    <div class="sc-line"></div>
+    <span class="sc-lbl">Descobrir</span>
   </div>
 </section>
 
-<!-- ─── FEATURES ──────────────────────────────────────────────────── -->
+<!-- BENEFITS -->
+<section id="benefits">
+  <span class="sec-eye rv">Por que escolher</span>
+  <h2 class="sec-h rv">O que cada historia<br><em>desperta</em></h2>
+  <div class="sec-div rv"></div>
+  <div class="bene-grid">
+    <div class="bene-card rv">
+      <div class="bene-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#c8a84b" stroke-width="1.5" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+      <h4>Imaginacao Sem Limites</h4>
+      <p>Narrativas construidas para expandir o universo criativo da crianca, estimulando o pensamento original e a curiosidade genuina.</p>
+    </div>
+    <div class="bene-card rv" style="--d:.1s">
+      <div class="bene-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#c8a84b" stroke-width="1.5" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+      <h4>Inteligencia Emocional</h4>
+      <p>Personagens com profundidade emocional ensinam empatia, coragem e resiliencia de forma natural, atraves da identificacao genuina.</p>
+    </div>
+    <div class="bene-card rv" style="--d:.2s">
+      <div class="bene-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#c8a84b" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+      <h4>Habito de Leitura</h4>
+      <p>Escritas para criar desejo genuino de continuar lendo — historias que a crianca pede para ler novamente toda noite antes de dormir.</p>
+    </div>
+    <div class="bene-card rv" style="--d:.05s">
+      <div class="bene-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#c8a84b" stroke-width="1.5" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <h4>Conexao Familiar</h4>
+      <p>Momentos de leitura compartilhada criam memorias afetivas profundas, fortalecendo o vinculo entre pais e filhos de modo duradouro.</p>
+    </div>
+    <div class="bene-card rv" style="--d:.15s">
+      <div class="bene-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#c8a84b" stroke-width="1.5" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+      <h4>Qualidade Premium</h4>
+      <p>Ilustracoes cinematograficas e textos elaborados por especialistas em literatura infantil e design visual de alto nivel.</p>
+    </div>
+    <div class="bene-card rv" style="--d:.25s">
+      <div class="bene-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#c8a84b" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+      <h4>Qualquer Dispositivo</h4>
+      <p>Acesso instantaneo em tablet, celular e computador. Leitura em alta resolucao, adaptada a qualquer tela, a qualquer hora.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
 <section id="features">
-  <h2 class="section-title reveal">Por que as crianças amam? ✨</h2>
-  <p class="section-sub reveal">Tudo pensado para criar momentos mágicos</p>
-  <div class="features-grid">
-    <div class="feature-card reveal" style="transition-delay:.05s">
-      <span class="feature-icon">🎨</span>
-      <h3>Ilustrações Cinematográficas</h3>
-      <p>Arte estilo Disney Pixar 3D com iluminação quente e personagens ultra-expressivos que saltam da tela.</p>
+  <div class="feat-wrap">
+    <div class="feat-row rl">
+      <div class="feat-t">
+        <div class="feat-tag">Narrativa</div>
+        <h3>Historias com alma e <em>profundidade real</em></h3>
+        <p>Cada titulo e construido como um roteiro cinematografico — com arco emocional completo, reviravolta e um final que ressoa por dias. Uma experiencia que transforma.</p>
+        <p>Escrita para ser lida em voz alta tanto quanto em silencio. Melodica, viva, inesquecivel.</p>
+      </div>
+      <div class="feat-v" id="fv1"></div>
     </div>
-    <div class="feature-card reveal" style="transition-delay:.15s">
-      <span class="feature-icon">✨</span>
-      <h3>Animações Mágicas</h3>
-      <p>Cada página ganha vida com estrelas brilhantes, planetas girando e efeitos de luz que encantam.</p>
+    <div class="feat-row rev rr">
+      <div class="feat-t">
+        <div class="feat-tag">Ilustracao</div>
+        <h3>Arte visual que <em>paralisa de beleza</em></h3>
+        <p>Cada pagina e uma obra. Paletas cromaticas cinematograficas, iluminacao volumetrica e composicoes que parecem frames de um grande longa-metragem.</p>
+        <p>Imagens que a crianca quer tocar. Mundos que parecem reais demais para serem ficao.</p>
+      </div>
+      <div class="feat-v" id="fv2"></div>
     </div>
-    <div class="feature-card reveal" style="transition-delay:.25s">
-      <span class="feature-icon">😴</span>
-      <h3>Ritual de Dormir</h3>
-      <p>História calmante que leva a criança numa jornada relaxante pelo cosmos antes de adormecer.</p>
-    </div>
-    <div class="feature-card reveal" style="transition-delay:.35s">
-      <span class="feature-icon">📱</span>
-      <h3>Funciona em Tudo</h3>
-      <p>Celular, tablet, computador — a experiência é perfeita em qualquer tela, a qualquer hora.</p>
-    </div>
-    <div class="feature-card reveal" style="transition-delay:.45s">
-      <span class="feature-icon">🔊</span>
-      <h3>Narração em Breve</h3>
-      <p>Em breve: voz infantil narrando cada página com música ambiente espacial suave.</p>
-    </div>
-    <div class="feature-card reveal" style="transition-delay:.55s">
-      <span class="feature-icon">💛</span>
-      <h3>Valores Positivos</h3>
-      <p>Coragem, curiosidade e afeto — Noah ensina que o universo é um lugar seguro e maravilhoso.</p>
+    <div class="feat-row rl">
+      <div class="feat-t">
+        <div class="feat-tag">Desenvolvimento</div>
+        <h3>Valores que ficam <em>para sempre</em></h3>
+        <p>Coragem, empatia, gentileza, perseveranca — ensinados atraves da identificacao com personagens, nao atraves de licoes. A crianca aprende sentindo, nao ouvindo.</p>
+        <p>Desenvolvido com especialistas em pedagogia e desenvolvimento infantil.</p>
+      </div>
+      <div class="feat-v" id="fv3"></div>
     </div>
   </div>
 </section>
 
-<!-- ─── PREVIEW ────────────────────────────────────────────────────── -->
-<section id="preview">
-  <h2 class="section-title reveal">Prévia do Livro 🌌</h2>
-  <p class="section-sub reveal">Deslize para ver as páginas</p>
-  <div class="pages-showcase" id="pagesShowcase"></div>
-</section>
-
-<!-- ─── PRICING ───────────────────────────────────────────────────── -->
-<section id="pricing">
-  <h2 class="section-title reveal">Escolha sua Aventura 🚀</h2>
-  <p class="section-sub reveal">Invista em momentos mágicos</p>
-  <div class="pricing-grid">
-    <div class="price-card reveal reveal-left">
-      <div class="price-name">Explorador</div>
-      <div class="price-amount">Grátis</div>
-      <div class="price-period">Primeiros 5 capítulos</div>
-      <ul class="price-features">
-        <li>5 páginas da história</li>
-        <li>Animações básicas</li>
-        <li>Leitura online</li>
-      </ul>
-      <a href="#" class="btn-price outline" onclick="openReader();return false">Começar Grátis</a>
-    </div>
-    <div class="price-card featured reveal" style="transition-delay:.1s">
-      <div class="price-name">Astronauta</div>
-      <div class="price-amount">R$19</div>
-      <div class="price-period">acesso vitalício</div>
-      <ul class="price-features">
-        <li>40 páginas completas</li>
-        <li>Todas as animações</li>
-        <li>Download em PDF</li>
-        <li>Atualizações gratuitas</li>
-        <li>Certificado de leitura</li>
-      </ul>
-      <a href="#" class="btn-price main">Quero Ser Astronauta 🚀</a>
-    </div>
-    <div class="price-card reveal reveal-right" style="transition-delay:.2s">
-      <div class="price-name">Família Galáctica</div>
-      <div class="price-amount">R$35</div>
-      <div class="price-period">para até 4 crianças</div>
-      <ul class="price-features">
-        <li>Tudo do Astronauta</li>
-        <li>4 perfis de criança</li>
-        <li>Próximos 2 livros grátis</li>
-        <li>Modo narração incluso</li>
-        <li>Suporte prioritário</li>
-      </ul>
-      <a href="#" class="btn-price outline">Família Galáctica 🌟</a>
-    </div>
-  </div>
-</section>
-
-<!-- ─── REVIEWS ────────────────────────────────────────────────────── -->
-<section id="reviews">
-  <h2 class="section-title reveal">O que as famílias dizem 💬</h2>
-  <p class="section-sub reveal">Mais de 12.000 crianças já viajaram com Noah</p>
-  <div class="reviews-grid">
-    <div class="review-card reveal" style="transition-delay:.05s">
-      <div class="review-stars">★★★★★</div>
-      <p class="review-text">"Minha filha de 5 anos pediu para ler toda noite por duas semanas seguidas. As animações são lindíssimas e ela adora o Noah!"</p>
-      <div class="review-author">
-        <div class="review-avatar">👩</div>
-        <div><div class="review-name">Ana Paula M.</div><div class="review-role">Mãe de Isabela, 5 anos</div></div>
+<!-- WORLDS -->
+<section id="worlds">
+  <span class="sec-eye rv">A Colecao</span>
+  <h2 class="sec-h rv">Universos para<br><em>cada crianca</em></h2>
+  <p class="sec-p rv">Titulos para diferentes idades e temperamentos — cada mundo com identidade visual e narrativa unicas.</p>
+  <div class="sec-div rv"></div>
+  <div class="worlds-grid">
+    <div class="world-card rv" id="wc1">
+      <div class="world-ov"></div>
+      <div class="world-ct">
+        <span class="world-cat">Cosmo e Aventura</span>
+        <div class="world-name">O Atlas das Estrelas</div>
+        <p class="world-desc">Para criancas de 5 a 9 anos que sonham com o universo infinito.</p>
       </div>
     </div>
-    <div class="review-card reveal" style="transition-delay:.15s">
-      <div class="review-stars">★★★★★</div>
-      <p class="review-text">"Incrível! Os planetas são tão detalhados e fofos. Meu filho ficou fascinado com o universo depois desse livro. Valeu cada centavo!"</p>
-      <div class="review-author">
-        <div class="review-avatar">👨</div>
-        <div><div class="review-name">Carlos Eduardo</div><div class="review-role">Pai do Miguel, 7 anos</div></div>
+    <div class="world-card rv" id="wc2" style="--d:.12s">
+      <div class="world-ov"></div>
+      <div class="world-ct">
+        <span class="world-cat">Floresta e Magia</span>
+        <div class="world-name">O Jardim Secreto</div>
+        <p class="world-desc">Para criancas de 4 a 8 anos apaixonadas pela natureza e seus misterios.</p>
       </div>
     </div>
-    <div class="review-card reveal" style="transition-delay:.25s">
-      <div class="review-stars">★★★★★</div>
-      <p class="review-text">"Uso na sala de aula como ritual de encerramento. As crianças ficam completamente absortas — silêncio total! Recomendo a todos os professores."</p>
-      <div class="review-author">
-        <div class="review-avatar">👩‍🏫</div>
-        <div><div class="review-name">Profª Renata S.</div><div class="review-role">Educadora Infantil</div></div>
+    <div class="world-card rv" id="wc3" style="--d:.24s">
+      <div class="world-ov"></div>
+      <div class="world-ct">
+        <span class="world-cat">Mar e Profundeza</span>
+        <div class="world-name">O Reino das Mares</div>
+        <p class="world-desc">Para criancas de 6 a 10 anos encantadas pelo oceano misterioso.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ─── CTA ────────────────────────────────────────────────────────── -->
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <span class="sec-eye rv">Familias</span>
+  <h2 class="sec-h rv">O que as familias<br><em>estao sentindo</em></h2>
+  <div class="sec-div rv"></div>
+  <div class="test-grid">
+    <div class="test-card rv">
+      <div class="test-stars"><div class="ts"></div><div class="ts"></div><div class="ts"></div><div class="ts"></div><div class="ts"></div></div>
+      <p class="test-q">"Minha filha de sete anos parou de querer assistir televisao. Agora pede o tablet para ler. Nao poderia estar mais feliz com essa mudanca."</p>
+      <div class="test-author"><div class="test-av">C</div><div class="test-info"><h5>Camila Rocha</h5><span>Mae de Beatriz, 7 anos</span></div></div>
+    </div>
+    <div class="test-card rv" style="--d:.12s">
+      <div class="test-stars"><div class="ts"></div><div class="ts"></div><div class="ts"></div><div class="ts"></div><div class="ts"></div></div>
+      <p class="test-q">"A qualidade visual e impressionante. Parece que cada pagina saiu de um filme. Meu filho de nove anos ficou em silencio absoluto — e isso nunca acontece."</p>
+      <div class="test-author"><div class="test-av">F</div><div class="test-info"><h5>Felipe Andrade</h5><span>Pai de Lucas, 9 anos</span></div></div>
+    </div>
+    <div class="test-card rv" style="--d:.24s">
+      <div class="test-stars"><div class="ts"></div><div class="ts"></div><div class="ts"></div><div class="ts"></div><div class="ts"></div></div>
+      <p class="test-q">"Li junto com minha filha e me emocionei. Uma historia que faz adultos e criancas chorarem juntos e muito rara. Essa conseguiu."</p>
+      <div class="test-author"><div class="test-av">L</div><div class="test-info"><h5>Larissa Mendes</h5><span>Mae de Ana Clara, 6 anos</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
 <section id="cta">
-  <h2 class="reveal">Comece a aventura hoje 🌟</h2>
-  <p class="reveal">Cada noite pode ser uma viagem mágica pelo cosmos. Noah está pronto para decolar com seu filho!</p>
-  <div class="reveal">
-    <a href="#" class="btn-primary" style="font-size:1.1rem;padding:1rem 2.5rem" onclick="openReader();return false">
-      🚀 Ler o Livro Agora — Grátis
-    </a>
+  <div class="cta-box">
+    <span class="sec-eye rv">Oferta de Lancamento</span>
+    <h2 class="sec-h rv">Comece a jornada<br><em>agora mesmo</em></h2>
+    <p class="sec-p rv">Acesso instantaneo a toda a colecao. Sem mensalidade. Sem limite de leituras.</p>
+    <div class="cta-card rv">
+      <div class="badge-urg">Oferta valida por tempo limitado</div>
+      <div class="price-lbl">Colecao Completa — Acesso Vitalicio</div>
+      <div class="price-was">R$ 197,00</div>
+      <div class="price-now"><sup>R$</sup>47<sub>,90</sub></div>
+      <div class="price-note">pagamento unico — sem mensalidade</div>
+      <div class="incl">
+        <div class="incl-row"><div class="incl-dot">&#10003;</div>Todos os titulos da colecao — acesso imediato</div>
+        <div class="incl-row"><div class="incl-dot">&#10003;</div>Novos titulos incluidos automaticamente</div>
+        <div class="incl-row"><div class="incl-dot">&#10003;</div>Leitura em qualquer dispositivo, online e offline</div>
+        <div class="incl-row"><div class="incl-dot">&#10003;</div>Atividades pedagogicas e bonus exclusivos</div>
+        <div class="incl-row"><div class="incl-dot">&#10003;</div>Suporte dedicado para familias</div>
+      </div>
+      <button class="btn-buy">Quero a Colecao Agora</button>
+      <div class="guar">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 3.5l3.5-1.3 3.5 1.3v3.2c0 1.9-1.6 3.3-3.5 4.3-1.9-1-3.5-2.4-3.5-4.3V3.5z" stroke="#8090b0" stroke-width=".9" stroke-linejoin="round"/></svg>
+        Garantia de 7 dias ou seu dinheiro de volta, sem perguntas
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- ─── FOOTER ─────────────────────────────────────────────────────── -->
 <footer>
-  <p>✦ CosmicKids Books &nbsp;·&nbsp; Feito com 💛 para pequenos exploradores &nbsp;·&nbsp; 2024</p>
+  <div class="ft-brand">Mundos Magicos</div>
+  <div class="ft-links">
+    <a href="#">Privacidade</a><a href="#">Termos de Uso</a><a href="#">Suporte</a><a href="#">Contato</a>
+  </div>
+  <p class="ft-copy">2024 Mundos Magicos. Todos os direitos reservados.</p>
 </footer>
 
-<!-- ═══════════════════════════════════════════════════════════════════
-     READING OVERLAY
-════════════════════════════════════════════════════════════════════ -->
-<div id="reading-overlay">
-  <div class="reader-nav">
-    <div class="reader-title">📖 Noah e o Planeta dos Sonhos</div>
-    <div class="reader-controls">
-      <button class="reader-btn" onclick="scrollReaderTo('prev')">← Anterior</button>
-      <span id="reader-page-indicator" style="font-size:.82rem;color:rgba(255,255,255,.45);font-weight:700">Pág 1 / 10</span>
-      <button class="reader-btn" onclick="scrollReaderTo('next')">Próxima →</button>
-      <button class="reader-btn close-btn" onclick="closeReader()">✕ Fechar</button>
-    </div>
-  </div>
-  <div class="reader-progress-bar"><div class="reader-progress-fill" id="readerProgress"></div></div>
-  <div class="reader-pages" id="readerPages"></div>
-</div>
-
+<!-- THREE.JS CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
-/* ═══════════════════════════════════════════════════════════ STARS */
-const starCanvas = document.getElementById('starfield');
-const sCtx = starCanvas.getContext('2d');
-let stars = [];
-function initStars(){
-  starCanvas.width = window.innerWidth;
-  starCanvas.height = window.innerHeight;
-  stars = Array.from({length:200},()=>({
-    x:Math.random()*starCanvas.width,
-    y:Math.random()*starCanvas.height,
-    r:Math.random()*1.8+.3,
-    alpha:Math.random(),
-    speed:Math.random()*.008+.002,
-    phase:Math.random()*Math.PI*2
-  }));
-}
-let sTime = 0;
-function animStars(){
-  sCtx.clearRect(0,0,starCanvas.width,starCanvas.height);
-  sTime += .016;
-  stars.forEach(s=>{
-    const a = .3+.7*(.5+.5*Math.sin(s.phase+sTime*s.speed*60));
-    sCtx.globalAlpha = a;
-    sCtx.fillStyle = '#fffff0';
-    sCtx.beginPath();
-    sCtx.arc(s.x,s.y,s.r,0,Math.PI*2);
-    sCtx.fill();
-  });
-  sCtx.globalAlpha = 1;
-  requestAnimationFrame(animStars);
-}
-initStars();
-animStars();
-window.addEventListener('resize',initStars);
+// ============================================================
+// SHARED CLOCK
+// ============================================================
+const CLOCK = {t:0, listeners:[]};
+(function tick(ts){
+  CLOCK.t = ts * 0.001;
+  CLOCK.listeners.forEach(fn=>fn(CLOCK.t));
+  requestAnimationFrame(tick);
+})(0);
 
-/* ═══════════════════════════════════════════════════════ PARTICLES */
-function spawnParticles(){
-  const colors=['#ffd060','#4488ff','#ff66bb','#22ccaa','#a855f7','#ff8844'];
-  for(let i=0;i<22;i++){
-    const p=document.createElement('div');
-    p.className='particle';
-    const size=Math.random()*8+3;
-    p.style.cssText=`
-      width:${size}px;height:${size}px;
-      background:${colors[Math.floor(Math.random()*colors.length)]};
-      left:${Math.random()*100}vw;
-      bottom:-20px;
-      animation-duration:${Math.random()*12+8}s;
-      animation-delay:${Math.random()*10}s;
-    `;
-    document.body.appendChild(p);
-  }
-}
-spawnParticles();
-
-/* ═══════════════════════════════════════════════════════ CURSOR */
-const cur = document.getElementById('cursor');
-document.addEventListener('mousemove',e=>{
-  cur.style.left = e.clientX+'px';
-  cur.style.top  = e.clientY+'px';
-});
-
-/* ═══════════════════════════════════════════════════════ SCROLL REVEAL */
-const revEls = document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale');
-const revObs = new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){
-      const el = e.target;
-      const delay = parseFloat(el.style.transitionDelay||0)*1000;
-      setTimeout(()=>el.classList.add('visible'),delay > 0 ? 0 : 60);
-      revObs.unobserve(el);
-    }
-  });
-},{threshold:.15});
-revEls.forEach(el=>revObs.observe(el));
-
-/* ═══════════════════════════════════════════ BOOK STARS DECORATION */
-const bs = document.getElementById('bookStars');
-for(let i=0;i<18;i++){
-  const s=document.createElement('div');
-  s.style.cssText=`
-    position:absolute;width:2px;height:2px;background:white;border-radius:50%;
-    left:${Math.random()*100}%;top:${Math.random()*100}%;
-    animation:twinkle ${1+Math.random()*2}s ${Math.random()*2}s infinite;
-  `;
-  bs.appendChild(s);
+// ============================================================
+// HELPER: create a Three.js renderer fitted to a container
+// ============================================================
+function makeRenderer(canvas, container){
+  const r = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true});
+  const w = container.clientWidth  || container.offsetWidth  || 400;
+  const h = container.clientHeight || container.offsetHeight || 300;
+  r.setPixelRatio(Math.min(devicePixelRatio, 2));
+  r.setSize(w, h, false);          // false = don't set CSS size
+  canvas.style.width  = '100%';
+  canvas.style.height = '100%';
+  return {r, w, h};
 }
 
-/* ═══════════════════════════════════════════════ PAGE THUMBS MINI */
-const storyPages = [
-  {title:'Decolar',bg:['#04061a','#0d1245'],planet:{x:.7,y:.6,r:.22,c:'#4488ff'},emoji:'👨‍🚀'},
-  {title:'Via Láctea',bg:['#06041a','#130d2a'],planet:{x:.65,y:.55,r:.28,c:'#a855f7'},emoji:'🌌'},
-  {title:'Planeta Azul',bg:['#030d1a','#0a1840'],planet:{x:.6,y:.5,r:.32,c:'#2266cc'},emoji:'🌍'},
-  {title:'Planeta Rosa',bg:['#120418','#2a0828'],planet:{x:.55,y:.58,r:.28,c:'#ff66bb'},emoji:'🌸'},
-  {title:'Cometa',bg:['#04061a','#050e20'],planet:null,emoji:'☄️'},
-  {title:'Nebulosa',bg:['#0a041a','#180835'],planet:{x:.5,y:.55,r:.25,c:'#8844ee'},emoji:'🌠'},
-  {title:'Planeta Verde',bg:['#030a04','#081408'],planet:{x:.65,y:.55,r:.3,c:'#22aa44'},emoji:'🌿'},
-  {title:'Baleias Luz',bg:['#04061a','#0d1240'],planet:null,emoji:'🐋'},
-  {title:'Voltando',bg:['#03080f','#070d1e'],planet:{x:.5,y:.3,r:.2,c:'#3377ff'},emoji:'🏠'},
-  {title:'Boa Noite',bg:['#030408','#06080f'],planet:{x:.75,y:.7,r:.15,c:'#4488ff'},emoji:'😴'},
-];
-const showcase = document.getElementById('pagesShowcase');
-storyPages.forEach((pg,i)=>{
-  const thumb = document.createElement('div');
-  thumb.className = 'page-thumb reveal';
-  thumb.style.transitionDelay = (i*.07)+'s';
-  thumb.innerHTML = `
-    <canvas width="200" height="270"></canvas>
-    <div class="page-num-badge">Pág ${i+1}</div>
-    <div class="page-thumb-label">${pg.title}</div>
-  `;
-  thumb.addEventListener('click',()=>{ openReader(); setTimeout(()=>scrollReaderToPage(i),300); });
-  showcase.appendChild(thumb);
-  // Draw mini canvas
-  const cv = thumb.querySelector('canvas');
-  const ctx = cv.getContext('2d');
-  // bg gradient
-  const gr = ctx.createLinearGradient(0,0,0,270);
-  gr.addColorStop(0,pg.bg[0]); gr.addColorStop(1,pg.bg[1]);
-  ctx.fillStyle=gr; ctx.fillRect(0,0,200,270);
-  // mini stars
-  for(let s=0;s<50;s++){
-    ctx.globalAlpha=Math.random()*.8+.2;
-    ctx.fillStyle='#fffff0';
-    ctx.beginPath();ctx.arc(Math.random()*200,Math.random()*270,Math.random()*1.5+.3,0,Math.PI*2);ctx.fill();
-  }
-  ctx.globalAlpha=1;
-  // planet
-  if(pg.planet){
-    const px=pg.planet.x*200,py=pg.planet.y*270,pr=pg.planet.r*120;
-    const gp=ctx.createRadialGradient(px-pr*.3,py+pr*.3,pr*.1,px,py,pr);
-    gp.addColorStop(0,pg.planet.c+'ff'); gp.addColorStop(1,pg.planet.c+'44');
-    ctx.globalAlpha=.9;
-    ctx.fillStyle=gp; ctx.beginPath();ctx.arc(px,py,pr,0,Math.PI*2);ctx.fill();
-    ctx.globalAlpha=.25;
-    ctx.strokeStyle='rgba(255,255,255,.6)'; ctx.lineWidth=3;
-    ctx.beginPath();ctx.ellipse(px,py,pr*1.5,pr*.4,0,0,Math.PI*2);ctx.stroke();
-    ctx.globalAlpha=1;
-  }
-  // emoji
-  ctx.font=`${36}px serif`;
-  ctx.globalAlpha=.85;
-  ctx.fillText(pg.emoji,90,155);
-  ctx.globalAlpha=1;
-});
-
-/* ══════════════════════════════════════════════════════ READER */
-const READER_PAGES = [
-  {
-    bg:['#04061a','#0d1245','#1a0835'],
-    planet:{cx:.75,cy:.38,r:.22,color:'#4488ff',ring:true},
-    nebula:{x:.5,y:.6,r:.6,color:'rgba(68,136,255,.08)'},
-    text:'Era uma noite muito especial.\nNoah colocou seu <em>pijama espacial</em> e\napertou a mochila luminosa.',
-    title:'A Grande Partida 🚀',
-    emoji:'👨‍🚀',emojiX:.38,emojiY:.55,emojiSize:80
-  },
-  {
-    bg:['#04061a','#130d2a','#06041a'],
-    planet:{cx:.5,cy:.35,r:.35,color:'#a855f7',ring:true,stripes:true},
-    nebula:{x:.5,y:.55,r:.5,color:'rgba(168,85,247,.1)'},
-    text:'A mochila brilhou forte\ne Noah subiu pelos ares,\nentre <em>nuvens de estrelinhas</em>.',
-    title:'Decolando! ✨',
-    emoji:'🌌',emojiX:.5,emojiY:.58,emojiSize:60
-  },
-  {
-    bg:['#03080e','#060e1a','#020a18'],
-    planet:{cx:.68,cy:.38,r:.28,color:'#2266dd',stripes:true},
-    text:'O Planeta Azul chamou Noah\ncom seus <em>oceanos de luz</em>\ne nuvens suaves como algodão.',
-    title:'O Planeta Azul 🌊',
-    emoji:'🌍',emojiX:.3,emojiY:.55,emojiSize:72
-  },
-  {
-    bg:['#0a0412','#1a0828','#0a0420'],
-    planet:{cx:.65,cy:.36,r:.26,color:'#ff66bb',ring:true},
-    nebula:{x:.5,y:.5,r:.55,color:'rgba(255,102,187,.07)'},
-    text:'O Planeta Rosa tinha anéis\nfeitos de <em>pétalas congeladas</em>.\nEra o mais delicado de todos.',
-    title:'Planeta Rosa 🌸',
-    emoji:'🌷',emojiX:.32,emojiY:.56,emojiSize:68
-  },
-  {
-    bg:['#04061a','#060e20','#030812'],
-    planet:null,
-    comet:true,
-    text:'Um cometa passou rápido!\nSua <em>cauda de luz azul</em>\nbrilhou por todo o céu.',
-    title:'O Cometa ☄️',
-    emoji:'☄️',emojiX:.6,emojiY:.38,emojiSize:90
-  },
-  {
-    bg:['#06031a','#0e0428','#050218'],
-    planet:{cx:.5,cy:.38,r:.3,color:'#8844ee'},
-    nebula:{x:.5,y:.5,r:.6,color:'rgba(136,68,238,.12)'},
-    text:'Entrou numa <em>nebulosa roxa</em>\ncheinha de gás luminoso.\nEra como nadar em luz!',
-    title:'A Nebulosa Mágica 🌠',
-    emoji:'✨',emojiX:.5,emojiY:.6,emojiSize:60
-  },
-  {
-    bg:['#020804','#050e06','#020604'],
-    planet:{cx:.66,cy:.38,r:.28,color:'#22aa44',stripes:true,spots:true},
-    nebula:{x:.5,y:.55,r:.5,color:'rgba(34,170,68,.07)'},
-    text:'O Planeta Verde era coberto\nde <em>florestas de cristal azul</em>\ne rios de luz esmeralda.',
-    title:'Planeta Verde 🌿',
-    emoji:'🌲',emojiX:.3,emojiY:.55,emojiSize:70
-  },
-  {
-    bg:['#04061a','#0a0e28','#030514'],
-    planet:null,
-    text:'Baleias de luz passaram nadando!\n<em>Grandes, suaves e luminosas</em>,\ncantando canções de ninar cósmicas.',
-    title:'Baleias de Luz 🐋',
-    emoji:'🐳',emojiX:.5,emojiY:.45,emojiSize:100
-  },
-  {
-    bg:['#03060e','#060a18','#040810'],
-    planet:{cx:.5,cy:.28,r:.18,color:'#3377ff'},
-    text:'Era hora de voltar.\nA mochila piscou três vezes:\n<em>"Combustível de sonhos ainda cheio!"</em>',
-    title:'Voltando para Casa 🏠',
-    emoji:'🏠',emojiX:.5,emojiY:.58,emojiSize:64
-  },
-  {
-    bg:['#020305','#040608','#020305'],
-    planet:{cx:.72,cy:.72,r:.14,color:'#4488ff'},
-    text:'Noah fechou os olhos devagar...\ncom o <em>universo inteiro no coração</em>.\nBoa noite, pequeno astronauta.',
-    title:'Boa Noite, Noah 😴',
-    emoji:'😴',emojiX:.44,emojiY:.48,emojiSize:76
-  },
-];
-
-function buildReaderPages(){
-  const container = document.getElementById('readerPages');
-  container.innerHTML = '';
-  READER_PAGES.forEach((pg,idx)=>{
-    const div = document.createElement('div');
-    div.className = 'reader-page';
-    div.id = 'rpage-'+idx;
-
-    // Canvas background
-    const bgCv = document.createElement('canvas');
-    bgCv.className = 'page-bg';
-    bgCv.width = window.innerWidth;
-    bgCv.height = window.innerHeight;
-    div.appendChild(bgCv);
-    drawPageBg(bgCv, pg);
-
-    // Content
-    const lines = pg.text.split('\n');
-    const textHTML = lines.map(l=>`<p class="page-story-text">${l}</p>`).join('');
-    div.innerHTML += `
-      <div class="page-content">
-        <div class="page-illustration">
-          <canvas width="480" height="360" class="illus-cv" data-page="${idx}"></canvas>
-        </div>
-        <div class="page-text-block" id="ptb-${idx}">
-          <div class="page-number">✦ Página ${idx+1} de ${READER_PAGES.length} ✦</div>
-          <h3 style="font-family:'Fredoka One',cursive;color:var(--gold);text-align:center;margin-bottom:.8rem;font-size:1.3rem">${pg.title}</h3>
-          ${textHTML}
-        </div>
-      </div>
-      ${idx < READER_PAGES.length-1 ? '<div class="scroll-hint">▼ CONTINUAR</div>' : ''}
-    `;
-    container.appendChild(div);
-
-    // Draw illustration
-    setTimeout(()=>{
-      const icv = div.querySelector('.illus-cv');
-      if(icv) drawIllustration(icv, pg, idx);
-    }, 50);
+// ============================================================
+// STAR FIELD SHADER MATERIAL
+// ============================================================
+function starMat(uTime){
+  return new THREE.ShaderMaterial({
+    uniforms:{ uT:{value:0} },
+    vertexShader:`
+      attribute float sz; attribute vec3 col;
+      varying vec3 vC;
+      uniform float uT;
+      void main(){
+        vC = col;
+        float tw = 0.55 + 0.45*sin(uT*1.8 + position.x*0.5 + position.y*0.4);
+        gl_PointSize = sz * tw * 2.8;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+      }`,
+    fragmentShader:`
+      varying vec3 vC;
+      void main(){
+        float d = length(gl_PointCoord - vec2(0.5));
+        if(d > 0.5) discard;
+        float a = (1.0 - smoothstep(0.1,0.5,d)) * 0.9;
+        gl_FragColor = vec4(vC, a);
+      }`,
+    transparent:true,
+    blending:THREE.AdditiveBlending,
+    depthWrite:false,
+    vertexColors:false
   });
 }
 
-function drawPageBg(cv, pg){
-  const ctx = cv.getContext('2d');
-  const W2 = cv.width, H2 = cv.height;
-  const gr = ctx.createLinearGradient(0,0,0,H2);
-  (pg.bg||['#04061a','#0d1245']).forEach((c,i,a)=>gr.addColorStop(i/(a.length-1),c));
-  ctx.fillStyle=gr; ctx.fillRect(0,0,W2,H2);
+function buildStars(scene, n, spread, colors){
+  const geo = new THREE.BufferGeometry();
+  const pos = new Float32Array(n*3);
+  const col = new Float32Array(n*3);
+  const sz  = new Float32Array(n);
+  for(let i=0;i<n;i++){
+    pos[i*3]   = (Math.random()-.5)*spread;
+    pos[i*3+1] = (Math.random()-.5)*spread;
+    pos[i*3+2] = (Math.random()-.5)*spread;
+    sz[i]  = Math.random()*2.0+0.4;
+    const c = new THREE.Color(colors[Math.floor(Math.random()*colors.length)]);
+    col[i*3]=c.r; col[i*3+1]=c.g; col[i*3+2]=c.b;
+  }
+  geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+  geo.setAttribute('col',      new THREE.BufferAttribute(col,3));
+  geo.setAttribute('sz',       new THREE.BufferAttribute(sz, 1));
+
+  // Use a simple PointsMaterial approach for compat, but with ShaderMaterial
+  const mat = new THREE.ShaderMaterial({
+    uniforms:{ uT:{value:0} },
+    vertexShader:`
+      attribute float sz; attribute vec3 col;
+      varying vec3 vC;
+      uniform float uT;
+      void main(){
+        vC = col;
+        float tw = 0.5 + 0.5*sin(uT*1.6 + position.x*0.4 + position.y*0.35);
+        gl_PointSize = sz * tw * 2.6;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+      }`,
+    fragmentShader:`
+      varying vec3 vC;
+      void main(){
+        float d = length(gl_PointCoord - vec2(0.5));
+        if(d > 0.5) discard;
+        float a = (1.0 - smoothstep(0.1,0.5,d)) * 0.88;
+        gl_FragColor = vec4(vC, a);
+      }`,
+    transparent:true,
+    blending:THREE.AdditiveBlending,
+    depthWrite:false
+  });
+  const pts = new THREE.Points(geo, mat);
+  scene.add(pts);
+  return {pts, mat};
+}
+
+function buildNebula(scene, color, x, y, z, sc, op){
+  const mat = new THREE.ShaderMaterial({
+    uniforms:{ uT:{value:0}, uC:{value:new THREE.Color(color)}, uOp:{value:op} },
+    vertexShader:`varying vec2 vU; void main(){ vU=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }`,
+    fragmentShader:`
+      varying vec2 vU; uniform vec3 uC; uniform float uT,uOp;
+      float h(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.55); }
+      float n(vec2 p){ vec2 i=floor(p),f=fract(p); f=f*f*(3.-2.*f);
+        return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1)),f.x),f.y); }
+      void main(){
+        vec2 u=vU-.5; float d=length(u);
+        float ns = n(u*2.8+uT*.04) * n(u*5.5+uT*.025);
+        float a = (1.-smoothstep(.05,.48,d))*ns*uOp;
+        gl_FragColor = vec4(uC, a);
+      }`,
+    transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide
+  });
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(sc,sc), mat);
+  mesh.position.set(x,y,z);
+  scene.add(mesh);
+  return {mesh,mat};
+}
+
+// ============================================================
+// 1. BACKGROUND COSMOS
+// ============================================================
+(function(){
+  const canvas = document.getElementById('bgCanvas');
+  const r = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true});
+  r.setPixelRatio(Math.min(devicePixelRatio,2));
+  r.setSize(innerWidth, innerHeight, false);
+  canvas.style.width='100%'; canvas.style.height='100%';
+
+  const scene = new THREE.Scene();
+  const cam = new THREE.PerspectiveCamera(65, innerWidth/innerHeight, 0.1, 800);
+  cam.position.z = 5;
+
+  const starColors = ['#ccd8ff','#ffffff','#aac0ff','#ffd090','#ffb860','#d0b0ff'];
+  const {pts:stars, mat:sm} = buildStars(scene, 4500, 130, starColors);
+
+  const nebs = [
+    buildNebula(scene,'#3a12a0',-5,  2,-32,45,.18),
+    buildNebula(scene,'#1a3090', 7, -2,-38,55,.13),
+    buildNebula(scene,'#600a80', 0,  5,-28,38,.12),
+    buildNebula(scene,'#0a2060',-8, -4,-34,42,.1),
+  ];
+
+  // Gold dust
+  const DN=350, dp=new Float32Array(DN*3), ds=new Float32Array(DN);
+  for(let i=0;i<DN;i++){
+    dp[i*3]=(Math.random()-.5)*28; dp[i*3+1]=(Math.random()-.5)*28; dp[i*3+2]=(Math.random()-.5)*16;
+    ds[i]=Math.random()*2.0+0.5;
+  }
+  const dg=new THREE.BufferGeometry();
+  dg.setAttribute('position',new THREE.BufferAttribute(dp,3));
+  dg.setAttribute('sz',new THREE.BufferAttribute(ds,1));
+  const dm=new THREE.ShaderMaterial({
+    uniforms:{uT:{value:0}},
+    vertexShader:`attribute float sz; uniform float uT;
+      void main(){
+        vec3 p=position;
+        p.y+=sin(uT*.38+position.x)*0.4;
+        p.x+=cos(uT*.28+position.y)*0.3;
+        gl_PointSize=sz*(1.+.4*sin(uT+position.z*2.));
+        gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);
+      }`,
+    fragmentShader:`void main(){
+        float d=length(gl_PointCoord-.5); if(d>.5)discard;
+        gl_FragColor=vec4(.9,.72,.28,(1.-smoothstep(0.,.5,d))*.5);
+      }`,
+    transparent:true,blending:THREE.AdditiveBlending,depthWrite:false
+  });
+  const dust=new THREE.Points(dg,dm);
+  scene.add(dust);
+
+  let mx=0,my=0,tx=0,ty=0;
+  document.addEventListener('mousemove',e=>{mx=(e.clientX/innerWidth-.5)*2;my=-(e.clientY/innerHeight-.5)*2});
+  window.addEventListener('resize',()=>{
+    cam.aspect=innerWidth/innerHeight; cam.updateProjectionMatrix();
+    r.setSize(innerWidth,innerHeight,false);
+  });
+
+  CLOCK.listeners.push(t=>{
+    tx+=(mx*.4-tx)*.034; ty+=(my*.25-ty)*.034;
+    cam.position.x=tx; cam.position.y=ty;
+    cam.rotation.y=tx*.025; cam.rotation.x=ty*.025;
+    sm.uniforms.uT.value=t;
+    dm.uniforms.uT.value=t;
+    nebs.forEach((nb,i)=>{nb.mat.uniforms.uT.value=t;nb.mesh.rotation.z=t*.003*(i%2?1:-1)});
+    stars.rotation.y=t*.006; stars.rotation.x=t*.002;
+    dust.rotation.y=t*.009;
+    r.render(scene,cam);
+  });
+})();
+
+// ============================================================
+// 2. BOOK COVER CANVAS
+// ============================================================
+(function(){
+  const cv = document.getElementById('coverCv');
+  if(!cv) return;
+  const parent = cv.parentElement;
+  const W = parent.offsetWidth  || 260;
+  const H = parent.offsetHeight || 360;
+  const r = new THREE.WebGLRenderer({canvas:cv, alpha:true, antialias:true});
+  r.setPixelRatio(Math.min(devicePixelRatio,2));
+  r.setSize(W,H,false);
+  cv.style.width='100%'; cv.style.height='100%';
+
+  const scene=new THREE.Scene();
+  const cam=new THREE.PerspectiveCamera(70,W/H,.1,100);
+  cam.position.z=3;
+
+  const starColors=['#ccd8ff','#ffffff','#aac0ff','#ffd090'];
+  const {pts:stars,mat:sm} = buildStars(scene,700,14,starColors);
+
+  // purple/blue nebula center
+  buildNebula(scene,'#4010b0',0,0,-5,9,.25);
+  buildNebula(scene,'#102080',0,0,-6,12,.18);
+
+  // Constellation lines (pentagon)
+  const pts2 = [[0,1.3,0],[1.1,.4,0],[.7,-.9,0],[-.7,-.9,0],[-1.1,.4,0]];
+  const lineArr=[];
+  pts2.forEach((a,i)=>{const b=pts2[(i+1)%pts2.length];lineArr.push(...a,...b);});
+  const lg=new THREE.BufferGeometry();
+  lg.setAttribute('position',new THREE.BufferAttribute(new Float32Array(lineArr),3));
+  scene.add(new THREE.LineSegments(lg,new THREE.LineBasicMaterial({color:0xc8a84b,opacity:.55,transparent:true})));
+
+  pts2.forEach(([x,y,z])=>{
+    const m=new THREE.Mesh(new THREE.SphereGeometry(.045,8,8),new THREE.MeshBasicMaterial({color:0xf0d070}));
+    m.position.set(x,y,z); scene.add(m);
+    // small glow ring
+    const rg=new THREE.Mesh(new THREE.RingGeometry(.07,.1,16),new THREE.MeshBasicMaterial({color:0xf0d070,opacity:.35,transparent:true,side:THREE.DoubleSide}));
+    rg.position.set(x,y,z); scene.add(rg);
+  });
+
+  // Center orb
+  const orbMat=new THREE.ShaderMaterial({
+    uniforms:{uT:{value:0}},
+    vertexShader:`varying vec3 vN; void main(){vN=normalize(normalMatrix*normal);gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+    fragmentShader:`varying vec3 vN;uniform float uT;
+      void main(){float rim=1.-dot(vN,vec3(0,0,1));float p=.5+.5*sin(uT*1.2);
+        float a=pow(rim,2.0)*(.45+.2*p);gl_FragColor=vec4(.5,.3,.95,a);}`,
+    transparent:true,blending:THREE.AdditiveBlending,depthWrite:false
+  });
+  scene.add(new THREE.Mesh(new THREE.SphereGeometry(.3,32,32),orbMat));
+
+  CLOCK.listeners.push(t=>{
+    sm.uniforms.uT.value=t; orbMat.uniforms.uT.value=t;
+    stars.rotation.y=t*.012; stars.rotation.x=t*.004;
+    r.render(scene,cam);
+  });
+})();
+
+// ============================================================
+// 3. FEATURE + WORLD CANVASES — built after layout
+// ============================================================
+function buildMiniScene(container, opts){
+  if(!container) return;
+  // create canvas
+  const cv = document.createElement('canvas');
+  cv.style.position='absolute';cv.style.inset='0';cv.style.width='100%';cv.style.height='100%';
+  container.style.position='relative';
+  container.appendChild(cv);
+
+  const W = container.offsetWidth  || 400;
+  const H = container.offsetHeight || 280;
+  const ren = new THREE.WebGLRenderer({canvas:cv, alpha:true, antialias:true});
+  ren.setPixelRatio(Math.min(devicePixelRatio,1.5));
+  ren.setSize(W,H,false);
+  cv.style.width='100%'; cv.style.height='100%';
+
+  const scene=new THREE.Scene();
+  const cam=new THREE.PerspectiveCamera(70,W/H,.1,100);
+  cam.position.z=3;
+
   // Stars
-  for(let i=0;i<120;i++){
-    ctx.globalAlpha=Math.random()*.8+.2;
-    ctx.fillStyle='rgba(255,255,240,'+(Math.random()*.9+.1)+')';
-    ctx.beginPath();ctx.arc(Math.random()*W2,Math.random()*H2,Math.random()*1.6+.3,0,Math.PI*2);ctx.fill();
-  }
-  ctx.globalAlpha=1;
-  // Nebula
-  if(pg.nebula){
-    const gn = ctx.createRadialGradient(pg.nebula.x*W2,pg.nebula.y*H2,0,pg.nebula.x*W2,pg.nebula.y*H2,pg.nebula.r*Math.max(W2,H2));
-    gn.addColorStop(0,pg.nebula.color); gn.addColorStop(1,'transparent');
-    ctx.fillStyle=gn; ctx.fillRect(0,0,W2,H2);
-  }
-}
+  const {pts:stars,mat:sm}=buildStars(scene,500,14,opts.starColors||['#ccd8ff','#ffffff','#aac0ff']);
 
-function drawIllustration(cv, pg, idx){
-  const ctx = cv.getContext('2d');
-  const W2=cv.width, H2=cv.height;
-  // Bg
-  const gr = ctx.createLinearGradient(0,0,0,H2);
-  (pg.bg||['#04061a','#0d1245']).forEach((c,i,a)=>gr.addColorStop(i/(a.length-1),c));
-  ctx.fillStyle=gr; ctx.fillRect(0,0,W2,H2);
-  // Stars
-  for(let i=0;i<70;i++){
-    ctx.globalAlpha=Math.random()*.9+.1;
-    ctx.fillStyle='#fffff0';
-    ctx.beginPath();ctx.arc(Math.random()*W2,Math.random()*H2*.7,Math.random()*1.8+.4,0,Math.PI*2);ctx.fill();
-  }
-  ctx.globalAlpha=1;
-  // Comet special
-  if(pg.comet){
-    ctx.globalAlpha=.9;
-    const grad=ctx.createLinearGradient(W2*.1,H2*.3,W2*.8,H2*.5);
-    grad.addColorStop(0,'rgba(100,180,255,0)');
-    grad.addColorStop(.7,'rgba(150,210,255,.55)');
-    grad.addColorStop(1,'rgba(220,240,255,.95)');
-    ctx.fillStyle=grad;
-    ctx.beginPath();ctx.ellipse(W2*.45,H2*.4,W2*.35,12,-.2,0,Math.PI*2);ctx.fill();
-    ctx.globalAlpha=.95;
-    ctx.fillStyle='rgba(230,245,255,.98)';
-    ctx.beginPath();ctx.arc(W2*.78,H2*.38,14,0,Math.PI*2);ctx.fill();
-    ctx.globalAlpha=1;
-  }
-  // Planet
-  if(pg.planet){
-    const {cx,cy,r,color,ring,stripes,spots}=pg.planet;
-    const px=cx*W2,py=cy*H2,pr=r*Math.min(W2,H2);
-    // glow
-    const gg=ctx.createRadialGradient(px,py,pr*.5,px,py,pr*2.2);
-    gg.addColorStop(0,color+'55'); gg.addColorStop(1,color+'00');
-    ctx.globalAlpha=.7; ctx.fillStyle=gg; ctx.beginPath();ctx.arc(px,py,pr*2.2,0,Math.PI*2);ctx.fill();
-    // body
-    const gp=ctx.createRadialGradient(px-pr*.3,py+pr*.3,pr*.1,px,py,pr);
-    gp.addColorStop(0,color+'ff'); gp.addColorStop(.6,color+'cc'); gp.addColorStop(1,color+'44');
-    ctx.globalAlpha=1; ctx.fillStyle=gp;
-    ctx.beginPath();ctx.arc(px,py,pr,0,Math.PI*2);ctx.fill();
-    if(stripes){
-      ctx.globalAlpha=.18;
-      for(let s=-2;s<=2;s++){
-        ctx.fillStyle='rgba(255,255,255,.8)';
-        ctx.beginPath();ctx.ellipse(px,py+s*pr*.28,pr*.95,pr*.08,0,0,Math.PI*2);ctx.fill();
-      }
-    }
-    if(spots){
-      ctx.globalAlpha=.22;
-      [[-.3,.1,.18],[.25,-.2,.1],[-.1,.3,.08]].forEach(([dx,dy,sr])=>{
-        ctx.fillStyle='rgba(0,0,0,.6)';
-        ctx.beginPath();ctx.arc(px+dx*pr,py+dy*pr,sr*pr,0,Math.PI*2);ctx.fill();
-      });
-    }
-    // highlight
-    ctx.globalAlpha=.55; ctx.fillStyle='rgba(255,255,255,.7)';
-    ctx.beginPath();ctx.ellipse(px-pr*.25,py+pr*.25,pr*.22,pr*.1,-.4,0,Math.PI*2);ctx.fill();
-    ctx.globalAlpha=1;
-    if(ring){
-      ctx.globalAlpha=.5;
-      ctx.strokeStyle='rgba(255,220,120,.75)'; ctx.lineWidth=pr*.12;
-      ctx.beginPath();ctx.ellipse(px,py,pr*1.55,pr*.38,0,0,Math.PI*2);ctx.stroke();
-      ctx.globalAlpha=1;
-    }
-  }
-  // Nebula blob
-  if(pg.nebula){
-    const gn=ctx.createRadialGradient(W2*.5,H2*.7,0,W2*.5,H2*.7,W2*.5);
-    gn.addColorStop(0,pg.nebula.color); gn.addColorStop(1,'transparent');
-    ctx.globalAlpha=.6; ctx.fillStyle=gn; ctx.fillRect(0,0,W2,H2); ctx.globalAlpha=1;
-  }
-  // Noah emoji
-  ctx.font=`${pg.emojiSize||72}px serif`;
-  ctx.globalAlpha=.92;
-  ctx.fillText(pg.emoji||'👨‍🚀',(pg.emojiX||.5)*W2-pg.emojiSize*.5,(pg.emojiY||.55)*H2+pg.emojiSize*.35);
-  ctx.globalAlpha=1;
-  // Animated glow on Noah
-  animateIllustrationGlow(cv, pg);
-}
+  // Nebulae
+  opts.nebs.forEach(n=>buildNebula(scene,n.c,n.x||0,n.y||0,n.z||-6,n.s||10,n.o||.2));
 
-function animateIllustrationGlow(cv, pg){
-  // Add subtle star twinkle animation
-  let frame=0;
-  const ctx=cv.getContext('2d');
-  function tick(){
-    if(!document.getElementById('reading-overlay').classList.contains('open')) return;
-    frame++;
-    // Twinkle a few random stars
-    if(frame%8===0){
-      const x=Math.random()*cv.width, y=Math.random()*cv.height*.65;
-      ctx.globalAlpha=Math.random()*.8;
-      ctx.fillStyle='rgba(255,255,220,.9)';
-      ctx.beginPath();ctx.arc(x,y,Math.random()*2+.5,0,Math.PI*2);ctx.fill();
-      ctx.globalAlpha=1;
-    }
-    requestAnimationFrame(tick);
-  }
-  tick();
-}
-
-/* Reader open/close */
-function openReader(){
-  const overlay = document.getElementById('reading-overlay');
-  overlay.classList.add('open');
-  document.body.style.overflow='hidden';
-  if(!overlay.querySelector('.reader-page')){
-    buildReaderPages();
-    setupReaderScroll();
-  }
-}
-function closeReader(){
-  document.getElementById('reading-overlay').classList.remove('open');
-  document.body.style.overflow='';
-}
-
-let currentReaderPage = 0;
-function setupReaderScroll(){
-  const pages2 = document.getElementById('readerPages');
-  pages2.addEventListener('scroll',()=>{
-    const H2 = window.innerHeight;
-    const scrollTop = pages2.scrollTop;
-    const total = pages2.scrollHeight - H2;
-    const prog = (total > 0 ? scrollTop/total : 0)*100;
-    document.getElementById('readerProgress').style.width = prog+'%';
-
-    // Which page
-    const pageEls = pages2.querySelectorAll('.reader-page');
-    pageEls.forEach((el,i)=>{
-      const rect = el.getBoundingClientRect();
-      if(rect.top <= window.innerHeight*.4 && rect.bottom >= window.innerHeight*.4){
-        currentReaderPage = i;
-        document.getElementById('reader-page-indicator').textContent = `Pág ${i+1} / ${READER_PAGES.length}`;
-      }
-      // Text block animation on scroll into view
-      const tb = el.querySelector('.page-text-block');
-      if(tb && rect.top < window.innerHeight*.75 && rect.top > -window.innerHeight){
-        setTimeout(()=>tb.classList.add('animate-in'),100);
-      }
-    });
+  // Glowing orb / sphere
+  const omMat=new THREE.ShaderMaterial({
+    uniforms:{uT:{value:0},uC:{value:new THREE.Color(opts.orbColor||'#6030dc')}},
+    vertexShader:`varying vec3 vN;void main(){vN=normalize(normalMatrix*normal);gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+    fragmentShader:`varying vec3 vN;uniform float uT;uniform vec3 uC;
+      void main(){float rim=1.-dot(vN,vec3(0,0,1));float p=.5+.5*sin(uT*1.1);
+        float a=pow(rim,2.)*(.5+.2*p); gl_FragColor=vec4(uC,a);}`,
+    transparent:true,blending:THREE.AdditiveBlending,depthWrite:false
   });
-  // Trigger first page
-  setTimeout(()=>{
-    const first = document.querySelector('#rpage-0 .page-text-block');
-    if(first) first.classList.add('animate-in');
-  }, 400);
+  const orb=new THREE.Mesh(new THREE.SphereGeometry(opts.orbSize||.5,32,32),omMat);
+  scene.add(orb);
+
+  // Inner solid core (subtle)
+  const coreMat=new THREE.MeshBasicMaterial({color:opts.orbColor||'#6030dc',opacity:.08,transparent:true});
+  scene.add(new THREE.Mesh(new THREE.SphereGeometry((opts.orbSize||.5)*.5,16,16),coreMat));
+
+  // Optional ring
+  if(opts.ring){
+    const rmMat=new THREE.MeshBasicMaterial({color:opts.orbColor||'#6030dc',opacity:.2,transparent:true,side:THREE.DoubleSide,wireframe:false});
+    const ring=new THREE.Mesh(new THREE.RingGeometry(opts.orbSize*.85,opts.orbSize*1.1,64),rmMat);
+    ring.rotation.x=Math.PI*.35;
+    scene.add(ring);
+    CLOCK.listeners.push(t=>ring.rotation.z=t*.5);
+  }
+
+  // Extra dust
+  const dn=150, dp2=new Float32Array(dn*3), ds2=new Float32Array(dn);
+  for(let i=0;i<dn;i++){
+    dp2[i*3]=(Math.random()-.5)*8; dp2[i*3+1]=(Math.random()-.5)*8; dp2[i*3+2]=(Math.random()-.5)*6;
+    ds2[i]=Math.random()*1.5+.3;
+  }
+  const dg2=new THREE.BufferGeometry();
+  dg2.setAttribute('position',new THREE.BufferAttribute(dp2,3));
+  dg2.setAttribute('sz',new THREE.BufferAttribute(ds2,1));
+  const dm2=new THREE.ShaderMaterial({
+    uniforms:{uT:{value:0},uC:{value:new THREE.Color(opts.dustColor||'#c8a84b')}},
+    vertexShader:`attribute float sz; uniform float uT;
+      void main(){vec3 p=position;p.y+=sin(uT*.4+position.x)*.25;p.x+=cos(uT*.3+position.y)*.2;
+        gl_PointSize=sz*(1.+.35*sin(uT+position.z));gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,
+    fragmentShader:`uniform vec3 uC;void main(){float d=length(gl_PointCoord-.5);if(d>.5)discard;
+        gl_FragColor=vec4(uC,(1.-smoothstep(0.,.5,d))*.55);}`,
+    transparent:true,blending:THREE.AdditiveBlending,depthWrite:false
+  });
+  const dust2=new THREE.Points(dg2,dm2);scene.add(dust2);
+
+  CLOCK.listeners.push(t=>{
+    sm.uniforms.uT.value=t; omMat.uniforms.uT.value=t; dm2.uniforms.uT.value=t;
+    stars.rotation.y=t*.01; stars.rotation.x=t*.003;
+    orb.rotation.y=t*.3;
+    dust2.rotation.y=t*.008;
+    ren.render(scene,cam);
+  });
 }
 
-function scrollReaderTo(dir){
-  const pages2 = document.getElementById('readerPages');
-  const target = dir==='next' ? Math.min(currentReaderPage+1,READER_PAGES.length-1) : Math.max(currentReaderPage-1,0);
-  scrollReaderToPage(target);
-}
-function scrollReaderToPage(idx){
-  const el = document.getElementById('rpage-'+idx);
-  if(el){
-    el.scrollIntoView({behavior:'smooth'});
-    currentReaderPage = idx;
-  }
-}
+// Wait for layout then build all mini scenes
+window.addEventListener('load', function(){
+  // Feature panels
+  buildMiniScene(document.getElementById('fv1'),{
+    orbColor:'#7030e0',orbSize:.55,ring:true,dustColor:'#c8a84b',
+    starColors:['#ccd8ff','#ffffff','#d0b0ff'],
+    nebs:[{c:'#4010b0',x:-1,y:.5,z:-6,s:9,o:.22},{c:'#1020a0',x:1,y:-.5,z:-8,s:11,o:.15}]
+  });
+  buildMiniScene(document.getElementById('fv2'),{
+    orbColor:'#d06020',orbSize:.5,ring:false,dustColor:'#e0c060',
+    starColors:['#ffe8b0','#ffffff','#ffd090'],
+    nebs:[{c:'#803010',x:0,y:0,z:-6,s:9,o:.2},{c:'#604010',x:1,y:1,z:-9,s:12,o:.14}]
+  });
+  buildMiniScene(document.getElementById('fv3'),{
+    orbColor:'#1060c0',orbSize:.52,ring:true,dustColor:'#40d0c0',
+    starColors:['#b0e0ff','#ffffff','#60c0ff'],
+    nebs:[{c:'#104080',x:0,y:0,z:-6,s:10,o:.2},{c:'#1080a0',x:-1,y:.5,z:-8,s:12,o:.15}]
+  });
 
-/* Keyboard nav */
-document.addEventListener('keydown',e=>{
-  if(document.getElementById('reading-overlay').classList.contains('open')){
-    if(e.key==='ArrowDown'||e.key==='ArrowRight') scrollReaderTo('next');
-    if(e.key==='ArrowUp'||e.key==='ArrowLeft') scrollReaderTo('prev');
-    if(e.key==='Escape') closeReader();
-  }
+  // World cards
+  buildMiniScene(document.getElementById('wc1'),{
+    orbColor:'#5020b0',orbSize:.7,ring:true,dustColor:'#c8a84b',
+    starColors:['#ccd8ff','#ffffff','#d0b0ff','#aac0ff'],
+    nebs:[{c:'#3010a0',x:0,y:.5,z:-5,s:10,o:.25},{c:'#2030c0',x:1,y:-.5,z:-7,s:12,o:.18}]
+  });
+  buildMiniScene(document.getElementById('wc2'),{
+    orbColor:'#206040',orbSize:.65,ring:false,dustColor:'#80e060',
+    starColors:['#c0ffb0','#ffffff','#a0ff80'],
+    nebs:[{c:'#104020',x:0,y:0,z:-5,s:10,o:.2},{c:'#204010',x:-1,y:.5,z:-7,s:12,o:.15}]
+  });
+  buildMiniScene(document.getElementById('wc3'),{
+    orbColor:'#104080',orbSize:.7,ring:true,dustColor:'#40c0e0',
+    starColors:['#b0e0ff','#ffffff','#80c8ff'],
+    nebs:[{c:'#082040',x:0,y:0,z:-5,s:10,o:.2},{c:'#104060',x:1,y:-.5,z:-7,s:12,o:.16}]
+  });
 });
 
-/* Touch swipe on reader */
-let touchStartY=0;
-document.getElementById('reading-overlay').addEventListener('touchstart',e=>touchStartY=e.touches[0].clientY,{passive:true});
-document.getElementById('reading-overlay').addEventListener('touchend',e=>{
-  const diff=touchStartY-e.changedTouches[0].clientY;
-  if(Math.abs(diff)>60){
-    if(diff>0) scrollReaderTo('next'); else scrollReaderTo('prev');
-  }
-},{passive:true});
+// ============================================================
+// CURSOR
+// ============================================================
+(function(){
+  const c=document.getElementById('cur'),r=document.getElementById('cur-r');
+  if(!c)return;
+  let cx=0,cy=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{cx=e.clientX;cy=e.clientY;c.style.left=cx+'px';c.style.top=cy+'px'});
+  CLOCK.listeners.push(()=>{rx+=(cx-rx)*.1;ry+=(cy-ry)*.1;r.style.left=rx+'px';r.style.top=ry+'px'});
+  document.querySelectorAll('button,a,.bene-card,.test-card,.world-card').forEach(el=>{
+    el.addEventListener('mouseenter',()=>c.classList.add('big'));
+    el.addEventListener('mouseleave',()=>c.classList.remove('big'));
+  });
+})();
+
+// ============================================================
+// SCROLL PROGRESS + NAV
+// ============================================================
+window.addEventListener('scroll',()=>{
+  const d=document.documentElement.scrollHeight-innerHeight;
+  document.getElementById('prog').style.width=(scrollY/d*100)+'%';
+  document.getElementById('nav').style.background=scrollY>60?'rgba(2,5,16,.88)':'rgba(2,5,16,.5)';
+});
+
+// ============================================================
+// GSAP ANIMATIONS
+// ============================================================
+gsap.registerPlugin(ScrollTrigger);
+
+// Hero entrance
+gsap.timeline({delay:.3})
+  .to('.hero-tag',{opacity:1,y:0,duration:.9,ease:'power3.out'})
+  .to('.book-stage',{opacity:1,y:0,duration:1.3,ease:'power3.out'},'-=.5')
+  .to('.hero-h',{opacity:1,y:0,duration:1,ease:'power3.out'},'-=.65')
+  .to('.hero-sub',{opacity:1,y:0,duration:.85,ease:'power3.out'},'-=.5')
+  .to('.hero-btns',{opacity:1,y:0,duration:.8,ease:'power3.out'},'-=.4');
+
+// Generic reveal
+document.querySelectorAll('.rv').forEach(el=>{
+  gsap.fromTo(el,{opacity:0,y:52},{
+    opacity:1,y:0,duration:.95,ease:'power3.out',
+    delay: parseFloat(getComputedStyle(el).getPropertyValue('--d')) || 0,
+    scrollTrigger:{trigger:el,start:'top 89%',toggleActions:'play none none none'}
+  });
+});
+document.querySelectorAll('.rl').forEach(el=>{
+  gsap.fromTo(el,{opacity:0,x:-55},{opacity:1,x:0,duration:1.1,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 82%'}});
+});
+document.querySelectorAll('.rr').forEach(el=>{
+  gsap.fromTo(el,{opacity:0,x:55},{opacity:1,x:0,duration:1.1,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 82%'}});
+});
+
+// Book parallax
+gsap.to('#bookStage',{yPercent:-18,ease:'none',scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom top',scrub:1.2}});
+
+// Book mouse 3D tilt
+const bw=document.getElementById('bwrap');
+if(bw){
+  document.addEventListener('mousemove',e=>{
+    const mx=(e.clientX/innerWidth-.5)*2, my=(e.clientY/innerHeight-.5)*2;
+    gsap.to(bw,{rotateY:mx*18-22,rotateX:-my*12+10,duration:.65,ease:'power2.out'});
+  });
+}
+
+// CTA pulse
+window.addEventListener('load',()=>{
+  gsap.to('.btn-buy',{boxShadow:'0 0 80px rgba(200,168,75,.72)',duration:1.6,ease:'power2.inOut',repeat:-1,yoyo:true});
+});
 </script>
 </body>
 </html>
